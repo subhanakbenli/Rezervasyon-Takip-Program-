@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>odaarama_MainWindow</class>
- <widget class="QMainWindow" name="odaarama_MainWindow">
+ <class>rezTakip_MainWindow</class>
+ <widget class="QMainWindow" name="rezTakip_MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1260</width>
-    <height>655</height>
+    <width>1238</width>
+    <height>736</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -33,7 +33,7 @@ Last updated: 01/10/2021 (dd/mm/yyyy), 15:18.
 Available at: https://github.com/GTRONICK/QSS/blob/master/Ubuntu.qss
 */
 QMainWindow {
-	background-color:#f0f0f0;
+	background-color: rgb(149, 149, 149);
 }
 QCheckBox {
 	padding:2px;
@@ -524,19 +524,7 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_7">
-    <property name="leftMargin">
-     <number>5</number>
-    </property>
-    <property name="topMargin">
-     <number>2</number>
-    </property>
-    <property name="rightMargin">
-     <number>5</number>
-    </property>
-    <property name="bottomMargin">
-     <number>2</number>
-    </property>
+   <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,4">
       <property name="spacing">
@@ -826,13 +814,85 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
          </spacer>
         </item>
         <item>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QLabel" name="label_5">
+                <property name="font">
+                 <font>
+                  <family>Times New Roman</family>
+                  <pointsize>12</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>ID:
+Ad Soyad:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="ID_lineEdit">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Times New Roman</family>
+                  <pointsize>10</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="inputMethodHints">
+                 <set>Qt::ImhNone</set>
+                </property>
+                <property name="inputMask">
+                 <string notr="true"/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="IDAra_pushButton">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Times New Roman</family>
+                  <pointsize>11</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color:rgb(189, 255, 200)</string>
+                </property>
+                <property name="text">
+                 <string>Ara</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
              <widget class="QPushButton" name="rezYap_pushButton">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -850,8 +910,7 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
               </property>
               <property name="text">
                <string>Rezervasyon
-Yap
-</string>
+Yap</string>
               </property>
              </widget>
             </item>
@@ -872,9 +931,9 @@ Yap
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="musterirezguncelle_pushButton">
+             <widget class="QPushButton" name="rezguncelle_pushButton">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -891,9 +950,7 @@ Yap
                <string notr="true">background-color:rgb(0, 245,0)</string>
               </property>
               <property name="text">
-               <string>Kayıtlı
-Rezervasyon
-Güncelle</string>
+               <string>Kayıtlı Rezervasyon Güncelle</string>
               </property>
              </widget>
             </item>
@@ -924,7 +981,7 @@ Güncelle</string>
          <enum>QTabWidget::Triangular</enum>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -947,7 +1004,7 @@ Güncelle</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_3">
           <item row="0" column="0">
-           <widget class="QTableWidget" name="odalar_tableWidget">
+           <widget class="QTableWidget" name="aktivite_tableWidget">
             <property name="font">
              <font>
               <family>Times New Roman</family>
@@ -1030,7 +1087,7 @@ Güncelle</string>
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QPushButton" name="musterilerlistele_pushButton_3">
+           <widget class="QPushButton" name="aktiviteListele_pushButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1061,7 +1118,7 @@ Güncelle</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_4">
           <item row="1" column="0">
-           <widget class="QTableWidget" name="musteri_tableWidget_3">
+           <widget class="QTableWidget" name="rezervasyon_tableWidget">
             <property name="font">
              <font>
               <family>Times New Roman</family>
@@ -1149,13 +1206,18 @@ Güncelle</string>
             </column>
             <column>
              <property name="text">
+              <string>Para Birimi</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
               <string>Sil</string>
              </property>
             </column>
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QPushButton" name="musterilerlistele_pushButton">
+           <widget class="QPushButton" name="rezervasyonListele_pushButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1186,7 +1248,7 @@ Güncelle</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_6">
           <item row="0" column="0">
-           <widget class="QTableWidget" name="musteri_tableWidget_2">
+           <widget class="QTableWidget" name="musteri_tableWidget">
             <property name="font">
              <font>
               <family>Times New Roman</family>
@@ -1275,7 +1337,7 @@ Güncelle</string>
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QPushButton" name="musterilerlistele_pushButton_2">
+           <widget class="QPushButton" name="musterilerListele_pushButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1311,7 +1373,7 @@ Güncelle</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1260</width>
+     <width>1238</width>
      <height>25</height>
     </rect>
    </property>
