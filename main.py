@@ -5,6 +5,12 @@ import sys
 from datetime import datetime,timedelta
 from ui_designs.rezTakip_ui import * 
 
+TABLO_AKTIVITELER="aktiviteler"
+INSERT_AKTIVITELER="(aktivite,TL,DOLAR,EURO,KART)"
+
+TABLO_REZERVASYONLAR="rezervasyonlar"
+INSERT_REZERVASYONLAR="(aktivite,otelAdı,adSoyad,rezDate,telefon,fiyat,paraBirimi)"
+
 Uygulama = QApplication(sys.argv)
 rezTakip_main_window = QMainWindow()
 rezTakip_ui = Ui_rezTakip_MainWindow()
@@ -14,21 +20,26 @@ class rezTakip():
     def __init__(self):
         self.conn=sqlite3.connect("database.db")
         self.curs=self.conn.cursor()
-        self.curs.execute("CREATE TABLE IF NOT EXISTS aktiviteler (aktivite Text PRIMARY KEY,fiyat FLOAT,paraBirimi text)")
+        self.curs.execute("CREATE TABLE IF NOT EXISTS aktiviteler (aktivite Text PRIMARY KEY,TL FLOAT,DOLAR FLOAT,EURO FLOAT,KART FLOAT)")
         self.curs.execute("CREATE TABLE IF NOT EXISTS rezervasyonlar \
-                        (ID INTEGER  PRIMARY KEY AUTOINCREMENT,\
-                        aktivite Text ,otelAdı Text,adSoyad TEXT,rezDate DATE,telefon TEXT,fiyat FLOAT,paraBirimi text)")
+                        (ID INTEGER  PRIMARY KEY AUTOINCREMENT,aktivite Text ,otelAdı Text,\
+                            adSoyad TEXT,rezDate DATE,telefon TEXT,fiyat FLOAT,paraBirimi text)")
         
-        rezTakip_ui.aktiviteListele_pushButton.clicked.connect(lambda : self.sqlden_cagir_tabloya_dok("aktiviteler",rezTakip_ui.aktivite_tableWidget))
-        rezTakip_ui.rezervasyonListele_pushButton.clicked.connect(lambda : self.sqlden_cagir_tabloya_dok("rezervasyonlar",rezTakip_ui.rezervasyon_tableWidget))
+        rezTakip_ui.aktiviteListele_pushButton.clicked.connect(lambda : self.sqlden_cagir_tabloya_dok(TABLO_AKTIVITELER,rezTakip_ui.aktivite_tableWidget))
+        rezTakip_ui.rezervasyonListele_pushButton.clicked.connect(lambda : self.sqlden_cagir_tabloya_dok(TABLO_REZERVASYONLAR,rezTakip_ui.rezervasyon_tableWidget))
+        
+        rezTakip_ui.rezYap_pushButton.clicked.connect(lambda : self.rezervasyon_ekle())
     def sqlden_cagir_tabloya_dok(self,tablo_adi,tablo):
         self.curs.execute(f"SELECT * FROM {tablo_adi}")
         data=self.curs.fetchall()
         tabloya_dok(tablo,data)
         
     def aktivite_ekle(self):
-        sql_tabloya_ekle(self.conn,self.curs,"aktiviteler",[("asd","150","tl")])
-                    
+        sql_tabloya_ekle(self.conn,self.curs, TABLO_AKTIVITELER, ("asd","150","tl"))
+        self.sqlden_cagir_tabloya_dok(TABLO_AKTIVITELER,rezTakip_ui.aktivite_tableWidget)
+    def rezervasyon_ekle(self):
+        sql_tabloya_ekle(self.conn,self.curs, f"{TABLO_REZERVASYONLAR} {INSERT_REZERVASYONLAR}", ("asd","otelim","sübhan akbenli","2023-09-09","05522612829",875.5,"EURO"))
+        self.sqlden_cagir_tabloya_dok(TABLO_REZERVASYONLAR,rezTakip_ui.rezervasyon_tableWidget)              
 def sql_tabloya_ekle(conn,curs,tabloadi,veri):
     soru_isareti_sayisi=(len(veri)*'?,').strip(",")
     curs.execute(f"INSERT INTO {tabloadi} VALUES({soru_isareti_sayisi})",(veri))
