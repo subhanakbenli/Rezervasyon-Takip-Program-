@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1434</width>
+    <width>1399</width>
     <height>807</height>
    </rect>
   </property>
@@ -911,7 +911,7 @@ Ad Soyad:</string>
              </font>
             </property>
             <property name="editTriggers">
-             <set>QAbstractItemView::NoEditTriggers</set>
+             <set>QAbstractItemView::DoubleClicked</set>
             </property>
             <property name="alternatingRowColors">
              <bool>true</bool>
@@ -1064,7 +1064,7 @@ Ad Soyad:</string>
              </font>
             </property>
             <property name="editTriggers">
-             <set>QAbstractItemView::NoEditTriggers</set>
+             <set>QAbstractItemView::DoubleClicked</set>
             </property>
             <property name="alternatingRowColors">
              <bool>true</bool>
@@ -1271,7 +1271,7 @@ Ad Soyad:</string>
              </font>
             </property>
             <property name="editTriggers">
-             <set>QAbstractItemView::NoEditTriggers</set>
+             <set>QAbstractItemView::DoubleClicked</set>
             </property>
             <property name="alternatingRowColors">
              <bool>true</bool>
@@ -1386,7 +1386,7 @@ Ad Soyad:</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1434</width>
+     <width>1399</width>
      <height>25</height>
     </rect>
    </property>

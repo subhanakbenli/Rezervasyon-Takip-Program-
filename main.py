@@ -144,8 +144,8 @@ def tabloya_dok(conn,curs,tablo, satirlar):
                     hucre = QTableWidgetItem(str(hucre_verisi))
                     tablo.setItem(satir_index, sutun_index, hucre)                      
                     tablo.setColumnWidth(sutun_index, 450)
-                    item = QTableWidgetItem(f'Row {satir_index}, Col {sutun_index}')
-                    item.setFlags(item.flags() ^ 2) ### burayı incele
+                    tablo.item(satir_index, sutun_index).setFlags(tablo.item(satir_index, sutun_index).flags() ^ 2) ### burayı incele
+                    
                 elif 0<sutun_index<5:
                     spin_box=CustomSpinBox()
                     spin_box.setValue(float(hucre_verisi))
@@ -164,18 +164,22 @@ def tabloya_dok(conn,curs,tablo, satirlar):
                     item.setFlags(item.flags() ^ 2) ### burayı incele
                 elif sutun_index==7 or sutun_index==6:          
                     tablo.setColumnWidth(sutun_index, 105)
-                    item = QTableWidgetItem(f'Row {satir_index}, Col {sutun_index}')
-                    item.setFlags(item.flags() ^ 2) ### burayı incele
+                    tablo.item(satir_index, sutun_index).setFlags(tablo.item(satir_index, sutun_index).flags() ^ 2) ### burayı incele
+
                 elif sutun_index == 4 :     tablo.setColumnWidth(sutun_index, 150)
                 elif sutun_index == 5:  tablo.setColumnWidth(sutun_index, 120)
                 else:                       tablo.setColumnWidth(sutun_index, 200) 
             
             elif tablo == rezTakip_ui.musteri_tableWidget:
                 hucre = QTableWidgetItem(str(hucre_verisi))
-                # Tabloya ekle
                 tablo.setItem(satir_index, sutun_index, hucre)  
-                tablo.setColumnWidth(sutun_index, 210) 
-        
+
+                if 1<sutun_index<5:
+                    tablo.setColumnWidth(sutun_index, 200) 
+                    tablo.item(satir_index, sutun_index).setFlags(tablo.item(satir_index, sutun_index).flags() ^ 2) ### burayı incele
+                else: 
+                    tablo.setColumnWidth(sutun_index, 280)
+                    
 def uyari_ver(text,wait=3000):
     rezTakip_ui.statusbar.showMessage(str(text),wait)
 
@@ -219,6 +223,7 @@ def sql_tablo_update_aktivite(conn,curs):
     except:
         uyari_ver("!! Beklenmeyen bir hata oluştu !!")
 
+
 def satir_sil_rezervasyon(conn,curs):
     try: 
         sender_button = rezTakip_main_window.sender()
@@ -235,7 +240,7 @@ def satir_sil_rezervasyon(conn,curs):
     except:
         uyari_ver("! Masa Silme İşleminde hata oluştu !")
 
-def sql_tablo_update_rezervasyon(conn,curs):
+def sql_tablo_update_rezervasyon(conn,curs):asdasd
     try: 
         sender_button = rezTakip_main_window.sender()
         if sender_button:
@@ -243,7 +248,7 @@ def sql_tablo_update_rezervasyon(conn,curs):
             
             if index.isValid():
                 row = index.row()
-                # id =                        rezTakip_ui.rezervasyon_tableWidget.item(row, 0).text()
+                id =                        rezTakip_ui.rezervasyon_tableWidget.item(row, 0).text()
                 aktAdi =                    rezTakip_ui.rezervasyon_tableWidget.item(row, 1).text()
                 otel_adi =                  rezTakip_ui.rezervasyon_tableWidget.item(row, 2).text()
                 ad_soyad =                  rezTakip_ui.rezervasyon_tableWidget.item(row, 3).text()
@@ -251,7 +256,6 @@ def sql_tablo_update_rezervasyon(conn,curs):
                 telefon =                   rezTakip_ui.rezervasyon_tableWidget.item(row, 5).text()
                 # tutar =                     rezTakip_ui.rezervasyon_tableWidget.item(row, 6).text()
                 # para_birimi=                rezTakip_ui.rezervasyon_tableWidget.item(row, 7).text()
-                print(aktAdi,tl,dolar,euro,kart)
                 
                 curs.execute(f"UPDATE {TABLO_REZERVASYONLAR} SET TL= ? , DOLAR = ?,EURO = ? , KART = ? WHERE aktivite = ?",
                     (tl,dolar,euro,kart,aktAdi))
@@ -267,7 +271,6 @@ def hucre_renklendir(tablo,row,column,color):
         if item:
             item.setBackground(color)
 
-uyari_ver("asdasd",5000)
 
 
 rezTakip()
