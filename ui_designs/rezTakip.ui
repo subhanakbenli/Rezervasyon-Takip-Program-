@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1238</width>
-    <height>736</height>
+    <width>1434</width>
+    <height>807</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -33,7 +33,7 @@ Last updated: 01/10/2021 (dd/mm/yyyy), 15:18.
 Available at: https://github.com/GTRONICK/QSS/blob/master/Ubuntu.qss
 */
 QMainWindow {
-	background-color: rgb(149, 149, 149);
+	background-color: rgb(210, 220, 255);
 }
 QCheckBox {
 	padding:2px;
@@ -526,9 +526,9 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,4">
+     <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,9">
       <property name="spacing">
-       <number>1</number>
+       <number>6</number>
       </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -644,74 +644,6 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
                 </item>
                </layout>
               </item>
-              <item row="3" column="0">
-               <layout class="QHBoxLayout" name="horizontalLayout">
-                <item>
-                 <widget class="QPushButton" name="UygunAktAra_pushButton">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>Times New Roman</family>
-                    <pointsize>11</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">background-color:rgb(255, 196, 255)</string>
-                  </property>
-                  <property name="text">
-                   <string>Uygun Aktivite Ara</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Fixed</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>10</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="UygunRezAra_pushButton">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>Times New Roman</family>
-                    <pointsize>11</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">background-color:rgb(255, 196, 255)</string>
-                  </property>
-                  <property name="text">
-                   <string>Uygun Rezervasyon Ara</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
               <item row="1" column="0">
                <layout class="QHBoxLayout" name="horizontalLayout_8">
                 <item>
@@ -794,169 +726,134 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
              </layout>
             </widget>
            </item>
+           <item row="0" column="1">
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item>
+                <widget class="QLabel" name="label_5">
+                 <property name="font">
+                  <font>
+                   <family>Times New Roman</family>
+                   <pointsize>12</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="text">
+                  <string>ID:
+Ad Soyad:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="ID_lineEdit">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Times New Roman</family>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="inputMethodHints">
+                  <set>Qt::ImhNone</set>
+                 </property>
+                 <property name="inputMask">
+                  <string notr="true"/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="IDAra_pushButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Times New Roman</family>
+                   <pointsize>11</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color:rgb(189, 255, 200)</string>
+                 </property>
+                 <property name="text">
+                  <string>Ara</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QPushButton" name="UygunAktAra_pushButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Times New Roman</family>
+                 <pointsize>11</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color:rgb(145, 196, 255)</string>
+               </property>
+               <property name="text">
+                <string>Uygun Aktivite Ara</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="UygunRezAra_pushButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Times New Roman</family>
+                 <pointsize>11</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color:rgb(255, 196, 255)</string>
+               </property>
+               <property name="text">
+                <string>Uygun Rezervasyon Ara</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
           </layout>
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_2">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <item>
-               <widget class="QLabel" name="label_5">
-                <property name="font">
-                 <font>
-                  <family>Times New Roman</family>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>ID:
-Ad Soyad:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="ID_lineEdit">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>Times New Roman</family>
-                  <pointsize>10</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="inputMethodHints">
-                 <set>Qt::ImhNone</set>
-                </property>
-                <property name="inputMask">
-                 <string notr="true"/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="IDAra_pushButton">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>Times New Roman</family>
-                  <pointsize>11</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">background-color:rgb(189, 255, 200)</string>
-                </property>
-                <property name="text">
-                 <string>Ara</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QPushButton" name="rezYap_pushButton">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Times New Roman</family>
-                <pointsize>11</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color:rgb(125, 250, 170)</string>
-              </property>
-              <property name="text">
-               <string>Rezervasyon
-Yap</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_4">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>15</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="rezguncelle_pushButton">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Times New Roman</family>
-                <pointsize>11</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color:rgb(0, 245,0)</string>
-              </property>
-              <property name="text">
-               <string>Kayıtlı Rezervasyon Güncelle</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
+         <layout class="QVBoxLayout" name="verticalLayout_3"/>
         </item>
        </layout>
       </item>
@@ -981,7 +878,7 @@ Yap</string>
          <enum>QTabWidget::Triangular</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -1044,7 +941,7 @@ Yap</string>
              <number>0</number>
             </property>
             <attribute name="horizontalHeaderDefaultSectionSize">
-             <number>270</number>
+             <number>180</number>
             </attribute>
             <attribute name="horizontalHeaderHighlightSections">
              <bool>true</bool>
@@ -1071,12 +968,27 @@ Yap</string>
             </column>
             <column>
              <property name="text">
-              <string>Fiyat</string>
+              <string>TL</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Para Birimi</string>
+              <string>DOLAR</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>EURO</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>KART</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Güncelle</string>
              </property>
             </column>
             <column>
@@ -1086,7 +998,7 @@ Yap</string>
             </column>
            </widget>
           </item>
-          <item row="1" column="0">
+          <item row="2" column="0">
            <widget class="QPushButton" name="aktiviteListele_pushButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -1107,6 +1019,30 @@ Yap</string>
             </property>
             <property name="text">
              <string>Bütün Aktivite  Listesini Getir</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="aktEkle_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>11</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:rgb(125, 250, 170)</string>
+            </property>
+            <property name="text">
+             <string>Aktivite Ekle</string>
             </property>
            </widget>
           </item>
@@ -1152,7 +1088,7 @@ Yap</string>
              <number>0</number>
             </property>
             <attribute name="horizontalHeaderDefaultSectionSize">
-             <number>150</number>
+             <number>140</number>
             </attribute>
             <attribute name="horizontalHeaderStretchLastSection">
              <bool>true</bool>
@@ -1211,12 +1147,17 @@ Yap</string>
             </column>
             <column>
              <property name="text">
+              <string>Güncelle</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
               <string>Sil</string>
              </property>
             </column>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="4" column="0">
            <widget class="QPushButton" name="rezervasyonListele_pushButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -1240,6 +1181,54 @@ Yap</string>
             </property>
            </widget>
           </item>
+          <item row="3" column="0">
+           <widget class="QPushButton" name="rezYap_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>11</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:rgb(125, 250, 170)</string>
+            </property>
+            <property name="text">
+             <string>Rezervasyon Yap</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="rezguncelle_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>11</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:rgb(0, 245,0)</string>
+            </property>
+            <property name="text">
+             <string>Kayıtlı Rezervasyon Güncelle</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
         <widget class="QWidget" name="tab_3">
@@ -1247,6 +1236,30 @@ Yap</string>
           <string>Müşteriler</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_6">
+          <item row="2" column="0">
+           <widget class="QPushButton" name="musterilerListele_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>11</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:rgb(220,240,150)</string>
+            </property>
+            <property name="text">
+             <string>Bütün Müşteri Listesini Getir</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QTableWidget" name="musteri_tableWidget">
             <property name="font">
@@ -1282,7 +1295,7 @@ Yap</string>
              <number>0</number>
             </property>
             <attribute name="horizontalHeaderDefaultSectionSize">
-             <number>170</number>
+             <number>200</number>
             </attribute>
             <attribute name="horizontalHeaderStretchLastSection">
              <bool>true</bool>
@@ -1299,11 +1312,6 @@ Yap</string>
             <attribute name="verticalHeaderStretchLastSection">
              <bool>false</bool>
             </attribute>
-            <column>
-             <property name="text">
-              <string>ID</string>
-             </property>
-            </column>
             <column>
              <property name="text">
               <string>Otel Adı</string>
@@ -1331,13 +1339,18 @@ Yap</string>
             </column>
             <column>
              <property name="text">
+              <string>Güncelle</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
               <string>Sil</string>
              </property>
             </column>
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QPushButton" name="musterilerListele_pushButton">
+           <widget class="QPushButton" name="musEkle_pushButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1353,10 +1366,10 @@ Yap</string>
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color:rgb(220,240,150)</string>
+             <string notr="true">background-color:rgb(125, 250, 170)</string>
             </property>
             <property name="text">
-             <string>Bütün Müşteri Listesini Getir</string>
+             <string>Müşteri Ekle</string>
             </property>
            </widget>
           </item>
@@ -1373,7 +1386,7 @@ Yap</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1238</width>
+     <width>1434</width>
      <height>25</height>
     </rect>
    </property>

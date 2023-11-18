@@ -1,57 +1,40 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QPushButton, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
 
-
-class MainWindow(QMainWindow):
+class MyTableWidget(QWidget):
     def __init__(self):
-        super(MainWindow, self).__init__()
+        super().__init__()
 
-        self.setWindowTitle("Silme Butonu ve Genişlik Örneği")
-        self.setGeometry(100, 100, 600, 400)
+        self.initUI()
 
-        # QTableWidget oluştur
+    def initUI(self):
+        self.setWindowTitle('Editable Table Widget')
+
+        # Tablo oluştur
         self.tableWidget = QTableWidget(self)
+        self.tableWidget.setRowCount(5)
         self.tableWidget.setColumnCount(3)
-        self.tableWidget.setHorizontalHeaderLabels(["Sütun 1", "Sütun 2", "Silme Butonu"])
-        
-        # Örnek veri ve silme butonu ekle
-        for row in range(5):
-            self.tableWidget.insertRow(row)
-            
-            # Örnek veri ekle
-            for col in range(2):
-                item = QTableWidgetItem(f"Satır {row+1}, Sütun {col+1}")
-                self.tableWidget.setItem(row, col, item)
-            
-            # Silme butonu ekle
-            delete_button = QPushButton("Sil", self)
-            delete_button.clicked.connect(self.delete_row)
-            self.tableWidget.setCellWidget(row, 2, delete_button)
-            
-            # Butonun genişliğini ayarla
-            delete_button.setMaximumWidth(80)
-            self.tableWidget.setColumnWidth(2,100)
 
-        # Layout
+        # Hücrelere başlangıç değerleri ekle
+        for row in range(5):
+            for col in range(3):
+                item = QTableWidgetItem(f'Row {row}, Col {col}')
+                self.tableWidget.setItem(row, col, item)
+
+        # Belirli hücreleri değiştirilemez yap
+        self.tableWidget.item(1, 1).setFlags(self.tableWidget.item(1, 1).flags() ^ 2)  # ~Qt.ItemIsEditable
+
+        # Layout oluştur
         layout = QVBoxLayout()
         layout.addWidget(self.tableWidget)
+        self.setLayout(layout)
 
-        central_widget = QWidget()
-        central_widget.setLayout(layout)
-        self.setCentralWidget(central_widget)
-
-    def delete_row(self):
-        # Silme butonuna tıklandığında çalışacak fonksiyon
-        button = self.sender()
-        if button:
-            index = self.tableWidget.indexAt(button.pos())
-            if index.isValid():
-                # Sütunu sil
-                self.tableWidget.removeRow(index.row())
-
-
-if __name__ == "__main__":
+def main():
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = MyTableWidget()
+    window.setGeometry(100, 100, 600, 400)
     window.show()
     sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    main()
