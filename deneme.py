@@ -1,40 +1,91 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
-
-class MyTableWidget(QWidget):
-    def __init__(self):
-        super().__init__()
-
-        self.initUI()
-
-    def initUI(self):
-        self.setWindowTitle('Editable Table Widget')
-
-        # Tablo oluştur
-        self.tableWidget = QTableWidget(self)
-        self.tableWidget.setRowCount(5)
-        self.tableWidget.setColumnCount(3)
-
-        # Hücrelere başlangıç değerleri ekle
-        for row in range(5):
-            for col in range(3):
-                item = QTableWidgetItem(f'Row {row}, Col {col}')
-                self.tableWidget.setItem(row, col, item)
-
-        # Belirli hücreleri değiştirilemez yap
-        self.tableWidget.item(1, 1).setFlags(self.tableWidget.item(1, 1).flags() ^ 2)  # ~Qt.ItemIsEditable
-
-        # Layout oluştur
-        layout = QVBoxLayout()
-        layout.addWidget(self.tableWidget)
-        self.setLayout(layout)
-
-def main():
-    app = QApplication(sys.argv)
-    window = MyTableWidget()
-    window.setGeometry(100, 100, 600, 400)
-    window.show()
-    sys.exit(app.exec_())
-
-if __name__ == '__main__':
-    main()
+aaa="""300102019 10 21
+310102009 15 52
+290102056 5 28
+300102040 5 38
+300102011 15 49
+300102006 15 46
+300102067 0 22
+300102022 11 40
+290102039 0
+300102051 10 33
+300102035 5 42
+300102043 6 31
+300102062 9 48
+300102025 1 24
+300102005 16 54
+290102055 16 60
+310102043 25 69
+310102050 6 29
+280102015 0
+310102016 14 65
+300102063 5 25
+300102083 25 73
+300102033 6 26
+310102015 5 18
+250102009 0
+290102026 15 38
+310102007 16 74
+310102048 25 76
+290102009 17 41
+300102055 19 56
+290102046 8 25
+300102048 0
+300102053 6 52
+300102027 11 41
+300102017 0 25
+290102051 13 50
+300102007 6 21
+310102006 25 78
+300102009 25 71
+300102084 25 94
+310102052 15 73
+300102028 5 20
+290102045 16 32
+300102058 16 48
+300102047 16 50
+300102026 6 26
+310102033 11 45
+300102036 5 36
+300102016 6 31
+300102020 0
+310102041 5 40
+310102024 25 70
+290102038 5 30
+300102059 2 24
+290102023 0 17
+310102002 20 65
+300102042 10 43
+280102020 16 42
+300102029 16 50
+300102021 6 49
+300102045 5 10
+290102015 11 45
+300102038 8 38
+270102017 6 40
+300102052 6 31
+300102050 16 37
+300102041 15 47
+290102048 11 31
+300102037 11 46
+300102060 5 15
+300102023 15 56
+300102056 1 32
+280102028 5 61
+300102061 2 10
+300102015 5 20
+290102065 0
+300102003 16 60
+310102003 21 73
+300102039 5 22
+300102066 5 19
+310102051 6 51"""
+adet=len(aaa.split("\n"))
+total=0
+for i in aaa.split("\n"):
+    cell=i.strip().split(" ")
+    no=cell[0]
+    final=cell[-1]
+    total+=float(final)
+    print(no,"-",final)
+print("not ortalaması:")
+print(total/adet)

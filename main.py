@@ -48,6 +48,7 @@ class rezTakip():
             self.satir_ekle_aktivite(rezTakip_ui.rezervasyon_tableWidget))
         rezTakip_ui.aktEkle_pushButton.clicked.connect(lambda : 
             self.satir_ekle_aktivite(rezTakip_ui.aktivite_tableWidget))
+        self.rezervasyon_ekle()
         
     def satir_ekle_aktivite(self,tablo):
         row=tablo.rowCount()
@@ -78,7 +79,7 @@ class rezTakip():
         sqlden_cagir_tabloya_dok(self.conn,self.curs,TABLO_REZERVASYONLAR,rezTakip_ui.rezervasyon_tableWidget)              
     
     def musteri_ekle(self):
-        # sql_tabloya_ekle(self.conn,self.curs, f"{TABLO_MUSTERILER} {INSERT_MUSTERILER}", ("otelim","05522612829",875.5,875.5,1756))
+        sql_tabloya_ekle(self.conn,self.curs, f"{TABLO_MUSTERILER} {INSERT_MUSTERILER}", ("otelim","05522612829",875.5,875.5,1756))
         sqlden_cagir_tabloya_dok(self.conn,self.curs,TABLO_MUSTERILER,rezTakip_ui.musteri_tableWidget)    
     
     
@@ -131,7 +132,7 @@ def tabloya_dok(conn,curs,tablo, satirlar):
             update_button.clicked.connect(lambda : sql_tablo_update_aktivite(conn,curs))
             delete_button.clicked.connect(lambda : satir_sil_aktivite(conn,curs))         
         elif tablo == rezTakip_ui.rezervasyon_tableWidget:  
-            # update_button.clicked.connect(lambda : sql)
+            update_button.clicked.connect(lambda : sql_tablo_update_rezervasyon(conn,curs))
             delete_button.clicked.connect(lambda : satir_sil_rezervasyon(conn,curs))
         # elif tablo == rezTakip_ui.musteri_tableWidget:      delete_button.clicked.connect(lambda : satir_sil_musteri())
         
@@ -240,13 +241,16 @@ def satir_sil_rezervasyon(conn,curs):
     except:
         uyari_ver("! Masa Silme İşleminde hata oluştu !")
 
-def sql_tablo_update_rezervasyon(conn,curs):asdasd
+def sql_tablo_update_rezervasyon(conn,curs):
     try: 
+        print("asdasdasd")
         sender_button = rezTakip_main_window.sender()
         if sender_button:
-            index = rezTakip_ui.aktivite_tableWidget.indexAt(sender_button.pos())
+            print("erwerwerwerwerwe")
+            index = rezTakip_ui.rezervasyon_tableWidget.indexAt(sender_button.pos())
             
             if index.isValid():
+                print("tıykfgmfgğ")
                 row = index.row()
                 id =                        rezTakip_ui.rezervasyon_tableWidget.item(row, 0).text()
                 aktAdi =                    rezTakip_ui.rezervasyon_tableWidget.item(row, 1).text()
@@ -255,9 +259,11 @@ def sql_tablo_update_rezervasyon(conn,curs):asdasd
                 rezervasyon_tarihi =        rezTakip_ui.rezervasyon_tableWidget.item(row, 4).text()
                 telefon =                   rezTakip_ui.rezervasyon_tableWidget.item(row, 5).text()
                 # tutar =                     rezTakip_ui.rezervasyon_tableWidget.item(row, 6).text()
-                # para_birimi=                rezTakip_ui.rezervasyon_tableWidget.item(row, 7).text()
-                
-                curs.execute(f"UPDATE {TABLO_REZERVASYONLAR} SET TL= ? , DOLAR = ?,EURO = ? , KART = ? WHERE aktivite = ?",
+                para_birimi=                rezTakip_ui.rezervasyon_tableWidget.cellWidget(row,4).value()
+                curs.execute(f"SELECT {para_birimi} FROM {TABLO_AKTIVITELER} where  aktivite = ?")
+                fiyat= curs.fetchone()
+                print(fiyat)
+                curs.execute(f"UPDATE {TABLO_REZERVASYONLAR} SET aktivite = ?,otelAdi = ?,adSoyad = ?,rezDate =?,telefon = ?,fiyat = ?,paraBirimi=? WHERE aktivite = ?",
                     (tl,dolar,euro,kart,aktAdi))
                 conn.commit()
                 uyari_ver("Başarıyla güncellendi")
