@@ -14,8 +14,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_rezTakip_MainWindow(object):
     def setupUi(self, rezTakip_MainWindow):
         rezTakip_MainWindow.setObjectName("rezTakip_MainWindow")
-        rezTakip_MainWindow.resize(1399, 807)
-        rezTakip_MainWindow.setMinimumSize(QtCore.QSize(0, 25))
+        rezTakip_MainWindow.resize(1500, 793)
+        rezTakip_MainWindow.setMinimumSize(QtCore.QSize(1500, 25))
         font = QtGui.QFont()
         font.setPointSize(10)
         rezTakip_MainWindow.setFont(font)
@@ -974,7 +974,7 @@ class Ui_rezTakip_MainWindow(object):
         self.gridLayout_2.addLayout(self.verticalLayout_6, 0, 0, 1, 1)
         rezTakip_MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(rezTakip_MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1399, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1500, 25))
         self.menubar.setObjectName("menubar")
         rezTakip_MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(rezTakip_MainWindow)
@@ -982,7 +982,7 @@ class Ui_rezTakip_MainWindow(object):
         rezTakip_MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(rezTakip_MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(rezTakip_MainWindow)
 
     def retranslateUi(self, rezTakip_MainWindow):

@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1399</width>
-    <height>807</height>
+    <width>1500</width>
+    <height>793</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>0</width>
+    <width>1500</width>
     <height>25</height>
    </size>
   </property>
@@ -878,7 +878,7 @@ Ad Soyad:</string>
          <enum>QTabWidget::Triangular</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -1386,7 +1386,7 @@ Ad Soyad:</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1399</width>
+     <width>1500</width>
      <height>25</height>
     </rect>
    </property>
