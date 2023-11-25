@@ -1,5 +1,4 @@
 # sübhan akbenli    
-program şuanda rezervasyondda aktivite ve otel adı çalışmıyor
 import sqlite3
 from PyQt5.QtWidgets import *
 import sys
@@ -146,6 +145,9 @@ def tabloya_dok(conn,curs,tablo, satirlar):
         elif tablo == rezTakip_ui.rezervasyon_tableWidget:  
             update_button.clicked.connect(lambda : sql_tablo_update_rezervasyon(conn,curs))
             delete_button.clicked.connect(lambda : satir_sil_rezervasyon(conn,curs))
+        elif tablo == rezTakip_ui.musteri_tableWidget:  
+            update_button.clicked.connect(lambda : sql_tablo_update_musteri(conn,curs))
+            delete_button.clicked.connect(lambda : satir_sil_musteri(conn,curs))
         # elif tablo == rezTakip_ui.musteri_tableWidget:      delete_button.clicked.connect(lambda : satir_sil_musteri())
         
         # Her bir hücreyi eklemek için döngü        
@@ -200,7 +202,9 @@ def tabloya_dok(conn,curs,tablo, satirlar):
                     tablo.setCellWidget(satir_index, sutun_index,date_edit)
                     tablo.setColumnWidth(sutun_index, 150)
                     
-                elif sutun_index == 5:  tablo.setColumnWidth(sutun_index, 160)                
+                elif sutun_index == 5:  
+                    tablo.setColumnWidth(sutun_index, 160)  
+                                  
                 elif sutun_index==6:          
                     tablo.setColumnWidth(sutun_index, 105)
                     tablo.item(satir_index, sutun_index).setFlags(tablo.item(satir_index, sutun_index).flags() ^ 2) ### burayı incele
@@ -220,9 +224,13 @@ def tabloya_dok(conn,curs,tablo, satirlar):
                 hucre = QTableWidgetItem(str(hucre_verisi))
                 tablo.setItem(satir_index, sutun_index, hucre)  
 
-                if 1<sutun_index<5:
+                if sutun_index==0:
+                    tablo.setColumnWidth(sutun_index, 280) 
+                    tablo.item(satir_index, sutun_index).setFlags(tablo.item(satir_index, sutun_index).flags() ^ 2) ### burayı incele
+                elif 1<sutun_index<5:
                     tablo.setColumnWidth(sutun_index, 200) 
                     tablo.item(satir_index, sutun_index).setFlags(tablo.item(satir_index, sutun_index).flags() ^ 2) ### burayı incele
+                    
                 else: 
                     tablo.setColumnWidth(sutun_index, 280)
                     
@@ -239,7 +247,7 @@ def satir_sil_aktivite(conn,curs):
                 row = index.row()
                 aktAdi = rezTakip_ui.aktivite_tableWidget.item(row, 0).text()
                 print(aktAdi)
-                curs.execute("DELETE FROM aktiviteler WHERE aktivite = ?", (aktAdi,))
+                curs.execute(f"DELETE FROM {TABLO_AKTIVITELER} WHERE aktivite = ?", (aktAdi,))
                 conn.commit()
                 uyari_ver("Aktivite : {aktAdi} başarıyla silindi")
                 sqlden_cagir_tabloya_dok(conn,curs,TABLO_AKTIVITELER,rezTakip_ui.aktivite_tableWidget)
@@ -279,12 +287,12 @@ def satir_sil_rezervasyon(conn,curs):
             if index.isValid():
                 row = index.row()
                 rezID = rezTakip_ui.rezervasyon_tableWidget.item(row, 0).text()
-                curs.execute("DELETE FROM rezervasyonlar WHERE rezID = ?", (rezID,))
+                curs.execute(f"DELETE FROM {TABLO_REZERVASYONLAR} WHERE rezID = ?", (rezID,))
                 conn.commit()
                 uyari_ver(f"Rezervasyon:{rezID} başarıyla silindi.")
                 sqlden_cagir_tabloya_dok(conn,curs,TABLO_REZERVASYONLAR,rezTakip_ui.rezervasyon_tableWidget)
     except:
-        uyari_ver("! Masa Silme İşleminde hata oluştu !")
+        uyari_ver("! Rezervasyon Silme İşleminde hata oluştu !")
 
 def sql_tablo_update_rezervasyon(conn,curs):
     try: 
@@ -295,19 +303,16 @@ def sql_tablo_update_rezervasyon(conn,curs):
             if index.isValid():
                 row = index.row()
                 id =                        rezTakip_ui.rezervasyon_tableWidget.item(row, 0).text()
-                aktAdi =                    rezTakip_ui.rezervasyon_tableWidget.item(row, 1).currentText()
-                otel_adi =                  rezTakip_ui.rezervasyon_tableWidget.item(row, 2).currentText()
+                aktAdi =                    rezTakip_ui.rezervasyon_tableWidget.cellWidget(row, 1).currentText()
+                otel_adi =                  rezTakip_ui.rezervasyon_tableWidget.cellWidget(row, 2).currentText()
                 ad_soyad =                  rezTakip_ui.rezervasyon_tableWidget.item(row, 3).text()
                 rezervasyon_tarihi =        rezTakip_ui.rezervasyon_tableWidget.cellWidget(row , 4).date().toPyDate()
                 telefon =                   rezTakip_ui.rezervasyon_tableWidget.item(row, 5).text()
                 para_birimi=                rezTakip_ui.rezervasyon_tableWidget.cellWidget(row,7).currentText()
                 curs.execute(f"SELECT {para_birimi} FROM {TABLO_AKTIVITELER} where  aktivite = ?",(aktAdi,))
                 fiyat= curs.fetchone()
-                print(fiyat,para_birimi)
                 
                 if fiyat != None:
-                    print(fiyat,para_birimi)
-                    
                     fiyat=fiyat[0]    
                     curs.execute(f"UPDATE {TABLO_REZERVASYONLAR} SET aktivite = ?,otelAdi = ?,adSoyad = ?,rezDate =?,telefon = ?,fiyat = ?,paraBirimi=? WHERE rezID = ?",
                         (aktAdi,otel_adi,ad_soyad,rezervasyon_tarihi,telefon,fiyat,para_birimi,        id))
@@ -321,23 +326,23 @@ def sql_tablo_update_rezervasyon(conn,curs):
         uyari_ver("!! Beklenmeyen bir hata oluştu !!")
 
 
-def satir_sil_rezervasyon(conn,curs):
+def satir_sil_musteri(conn,curs):
     try: 
         sender_button = rezTakip_main_window.sender()
         if sender_button:
-            index = rezTakip_ui.rezervasyon_tableWidget.indexAt(sender_button.pos())
+            index = rezTakip_ui.musteri_tableWidget.indexAt(sender_button.pos())
             
             if index.isValid():
                 row = index.row()
-                rezID = rezTakip_ui.rezervasyon_tableWidget.item(row, 0).text()
-                curs.execute("DELETE FROM rezervasyonlar WHERE rezID = ?", (rezID,))
+                otelAdi = rezTakip_ui.musteri_tableWidget.item(row, 0).text()
+                curs.execute(f"DELETE FROM {TABLO_MUSTERILER} WHERE otelAdi = ?", (otelAdi,))
                 conn.commit()
-                uyari_ver(f"Rezervasyon:{rezID} başarıyla silindi.")
-                sqlden_cagir_tabloya_dok(conn,curs,TABLO_REZERVASYONLAR,rezTakip_ui.rezervasyon_tableWidget)
+                uyari_ver(f"Rezervasyon:{otelAdi} başarıyla silindi.")
+                sqlden_cagir_tabloya_dok(conn,curs,TABLO_MUSTERILER,rezTakip_ui.musteri_tableWidget)
     except:
-        uyari_ver("! Masa Silme İşleminde hata oluştu !")
+        uyari_ver("! Otel Silme İşleminde hata oluştu !")
 
-def sql_tablo_update_rezervasyon(conn,curs):
+def sql_tablo_update_musteri(conn,curs):
     try: 
         sender_button = rezTakip_main_window.sender()
         if sender_button:
@@ -345,28 +350,13 @@ def sql_tablo_update_rezervasyon(conn,curs):
             
             if index.isValid():
                 row = index.row()
-                id =                        rezTakip_ui.rezervasyon_tableWidget.item(row, 0).text()
-                aktAdi =                    rezTakip_ui.rezervasyon_tableWidget.item(row, 1).text()
-                otel_adi =                  rezTakip_ui.rezervasyon_tableWidget.item(row, 2).text()
-                ad_soyad =                  rezTakip_ui.rezervasyon_tableWidget.item(row, 3).text()
-                rezervasyon_tarihi =        rezTakip_ui.rezervasyon_tableWidget.cellWidget(row , 4).date().toPyDate()
-                telefon =                   rezTakip_ui.rezervasyon_tableWidget.item(row, 5).text()
-                para_birimi=                rezTakip_ui.rezervasyon_tableWidget.cellWidget(row,7).currentText()
-                curs.execute(f"SELECT {para_birimi} FROM {TABLO_AKTIVITELER} where  aktivite = ?",(aktAdi,))
-                fiyat= curs.fetchone()
-                print(fiyat,para_birimi)
-                
-                if fiyat != None:
-                    print(fiyat,para_birimi)
-                    
-                    fiyat=fiyat[0]    
-                    curs.execute(f"UPDATE {TABLO_REZERVASYONLAR} SET aktivite = ?,otelAdi = ?,adSoyad = ?,rezDate =?,telefon = ?,fiyat = ?,paraBirimi=? WHERE rezID = ?",
-                        (aktAdi,otel_adi,ad_soyad,rezervasyon_tarihi,telefon,fiyat,para_birimi,        id))
-                    conn.commit()
-                    uyari_ver("Başarıyla güncellendi")
-                    rezTakip_ui.rezervasyon_tableWidget.setItem(row, 6, QTableWidgetItem(str(fiyat)))
-                else:
-                    uyari_ver("Bu aktivite için fiyat bulunamadı !!")
+                otel_adi =                  rezTakip_ui.rezervasyon_tableWidget.item(row, 0).text()
+                telefon =                   rezTakip_ui.rezervasyon_tableWidget.item(row, 1).text()
+                curs.execute(f"UPDATE {TABLO_MUSTERILER} SET telefon = ? WHERE otelAdi = ?",
+                        (telefon,otel_adi))
+                conn.commit()
+                uyari_ver("Başarıyla güncellendi")
+                rezTakip_ui.rezervasyon_tableWidget.setItem(row, 6, QTableWidgetItem(str(fiyat)))
 
     except:
         uyari_ver("!! Beklenmeyen bir hata oluştu !!")

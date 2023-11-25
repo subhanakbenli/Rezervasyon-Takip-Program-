@@ -878,7 +878,7 @@ Ad Soyad:</string>
          <enum>QTabWidget::Triangular</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>2</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -1157,7 +1157,7 @@ Ad Soyad:</string>
             </column>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="3" column="0">
            <widget class="QPushButton" name="rezervasyonListele_pushButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -1181,7 +1181,7 @@ Ad Soyad:</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item row="2" column="0">
            <widget class="QPushButton" name="rezYap_pushButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -1202,30 +1202,6 @@ Ad Soyad:</string>
             </property>
             <property name="text">
              <string>Rezervasyon Yap</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="rezguncelle_pushButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <family>Times New Roman</family>
-              <pointsize>11</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color:rgb(0, 245,0)</string>
-            </property>
-            <property name="text">
-             <string>Kayıtlı Rezervasyon Güncelle</string>
             </property>
            </widget>
           </item>
