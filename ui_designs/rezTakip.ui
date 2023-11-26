@@ -1300,17 +1300,22 @@ Ad Soyad:</string>
             </column>
             <column>
              <property name="text">
-              <string>Ödenen Tutar</string>
+              <string>TL</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Kalan Tutar</string>
+              <string>DOLAR</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Toplam</string>
+              <string>EURO</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>KART</string>
              </property>
             </column>
             <column>

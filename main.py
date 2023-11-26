@@ -12,7 +12,7 @@ TABLO_REZERVASYONLAR="rezervasyonlar"
 INSERT_REZERVASYONLAR="(aktivite,otelAdi,adSoyad,rezDate,telefon,fiyat,paraBirimi)"
 
 TABLO_MUSTERILER="musteriler"
-INSERT_MUSTERILER="(otelAdi,telefon,odenen,kalan,Toplam)"
+INSERT_MUSTERILER="(otelAdi,telefon)"
 
 Uygulama = QApplication(sys.argv)
 rezTakip_main_window = QMainWindow()
@@ -34,6 +34,7 @@ class CustomComboBox(QComboBox):
 class CustomQDateEdit(QDateEdit):
     def wheelEvent(self, event):
         event.ignore()
+
 class rezTakip():
     def __init__(self):
         self.conn=sqlite3.connect("database.db")
@@ -43,20 +44,22 @@ class rezTakip():
                         (rezID INTEGER  PRIMARY KEY AUTOINCREMENT,aktivite Text ,otelAdi Text,\
                             adSoyad TEXT,rezDate DATE,telefon TEXT,fiyat FLOAT,paraBirimi text)")
         self.curs.execute("CREATE TABLE IF NOT EXISTS musteriler \
-                        (otelAdi Text PRIMARY KEY,telefon Text,odenen FLOAT,kalan FLOAT,Toplam FLOAT)")
+                        (otelAdi Text PRIMARY KEY,telefon Text)")
         rezTakip_ui.aktiviteListele_pushButton.clicked.connect(lambda : 
             sqlden_cagir_tabloya_dok(self.conn,self.curs,TABLO_AKTIVITELER,rezTakip_ui.aktivite_tableWidget))
         rezTakip_ui.rezervasyonListele_pushButton.clicked.connect(lambda : 
             sqlden_cagir_tabloya_dok(self.conn,self.curs,TABLO_REZERVASYONLAR,rezTakip_ui.rezervasyon_tableWidget))
-        self.aktivite_ekle()
         rezTakip_ui.musterilerListele_pushButton.clicked.connect(lambda : 
             sqlden_cagir_tabloya_dok(self.conn,self.curs,TABLO_MUSTERILER,rezTakip_ui.musteri_tableWidget) )
         rezTakip_ui.rezYap_pushButton.clicked.connect(lambda : 
             self.satir_ekle_aktivite(rezTakip_ui.rezervasyon_tableWidget))
         rezTakip_ui.aktEkle_pushButton.clicked.connect(lambda : 
             self.satir_ekle_aktivite(rezTakip_ui.aktivite_tableWidget))
-        self.rezervasyon_ekle()
+        # self.rezervasyon_ekle()
         self.musteri_ekle()
+        # self.aktivite_ekle()
+
+
     def satir_ekle_aktivite(self,tablo):
         row=tablo.rowCount()
         tablo.setRowCount(row+1)
@@ -86,10 +89,25 @@ class rezTakip():
         sqlden_cagir_tabloya_dok(self.conn,self.curs,TABLO_REZERVASYONLAR,rezTakip_ui.rezervasyon_tableWidget)              
     
     def musteri_ekle(self):
-        sql_tabloya_ekle(self.conn,self.curs, f"{TABLO_MUSTERILER} {INSERT_MUSTERILER}", ("yurt","05522612829",875.5,875.5,1756))
+        sql_tabloya_ekle(self.conn,self.curs, f"{TABLO_MUSTERILER} {INSERT_MUSTERILER}", ("yurt2","05522612829"))
         sqlden_cagir_tabloya_dok(self.conn,self.curs,TABLO_MUSTERILER,rezTakip_ui.musteri_tableWidget)    
     
-    
+def fiyatlari_topla(conn,curs,otel_adi,para_birimi):
+    sql_sorgusu = """
+    SELECT SUM(fiyat) AS toplamFiyat
+    FROM rezervasyonlar
+    WHERE otelAdi = ? AND paraBirimi = ?
+    GROUP BY otelAdi, paraBirimi
+    """
+    # Sorguyu çalıştır
+    curs.execute(sql_sorgusu, (otel_adi, para_birimi))
+    toplam_fiyat=0
+    # Sonuçları al
+    sonuclar = curs.fetchall()
+    for sonuc, in sonuclar:
+        toplam_fiyat = sonuc  
+    return toplam_fiyat
+    # Veritabanı bağlantısını kapat
     
 def sql_tabloya_ekle(conn,curs,tabloadi,veri):
     try:
@@ -148,7 +166,6 @@ def tabloya_dok(conn,curs,tablo, satirlar):
         elif tablo == rezTakip_ui.musteri_tableWidget:  
             update_button.clicked.connect(lambda : sql_tablo_update_musteri(conn,curs))
             delete_button.clicked.connect(lambda : satir_sil_musteri(conn,curs))
-        # elif tablo == rezTakip_ui.musteri_tableWidget:      delete_button.clicked.connect(lambda : satir_sil_musteri())
         
         # Her bir hücreyi eklemek için döngü        
         for sutun_index, hucre_verisi in enumerate(satir):
@@ -179,6 +196,7 @@ def tabloya_dok(conn,curs,tablo, satirlar):
                     tablo.item(satir_index, sutun_index).setFlags(tablo.item(satir_index, sutun_index).flags() ^ 2) ### burayı incele
                 elif sutun_index ==1:
                     aktivite_combo=CustomComboBox()
+                    aktivite_combo.addItem("--")
                     aktivite_combo.addItems(aktivite_rezervasyon_combo_data)
                     aktivite_combo.setCurrentText(hucre_verisi)
                     
@@ -188,6 +206,7 @@ def tabloya_dok(conn,curs,tablo, satirlar):
                     
                 elif sutun_index ==2:
                     otelAdi_combo=CustomComboBox()
+                    otelAdi_combo.addItem("--")
                     otelAdi_combo.addItems(otelAdi_rezervasyon_combo_data)
                     otelAdi_combo.setCurrentText(hucre_verisi)
                     
@@ -225,14 +244,22 @@ def tabloya_dok(conn,curs,tablo, satirlar):
                 tablo.setItem(satir_index, sutun_index, hucre)  
 
                 if sutun_index==0:
-                    tablo.setColumnWidth(sutun_index, 280) 
+                    
+                    tablo.setColumnWidth(sutun_index, 250) 
                     tablo.item(satir_index, sutun_index).setFlags(tablo.item(satir_index, sutun_index).flags() ^ 2) ### burayı incele
+                    birimler=["TL","DOLAR","EURO","KART"]
+                    for add,birim in enumerate(birimler): # burada otelin ödemesi gerek toplam fiyatı yazıyoruz
+                        total=fiyatlari_topla(conn,curs,str(hucre_verisi),birim)
+                        hucre = QTableWidgetItem(str(total))
+                        tablo.setItem(satir_index, 2+add, hucre)  
+                        tablo.setColumnWidth(2+add, 200)
+                        tablo.item(satir_index, 2+add).setFlags(tablo.item(satir_index, 2+add).flags() ^ 2) ### burayı incele
                 elif 1<sutun_index<5:
                     tablo.setColumnWidth(sutun_index, 200) 
                     tablo.item(satir_index, sutun_index).setFlags(tablo.item(satir_index, sutun_index).flags() ^ 2) ### burayı incele
                     
                 else: 
-                    tablo.setColumnWidth(sutun_index, 280)
+                    tablo.setColumnWidth(sutun_index, 150)
                     
 def uyari_ver(text,wait=3000):
     rezTakip_ui.statusbar.showMessage(str(text),wait)
@@ -356,7 +383,6 @@ def sql_tablo_update_musteri(conn,curs):
                         (telefon,otel_adi))
                 conn.commit()
                 uyari_ver("Başarıyla güncellendi")
-                rezTakip_ui.rezervasyon_tableWidget.setItem(row, 6, QTableWidgetItem(str(fiyat)))
 
     except:
         uyari_ver("!! Beklenmeyen bir hata oluştu !!")
