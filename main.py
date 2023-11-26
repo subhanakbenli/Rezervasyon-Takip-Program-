@@ -56,7 +56,7 @@ class rezTakip():
         rezTakip_ui.aktEkle_pushButton.clicked.connect(lambda : 
             self.satir_ekle_aktivite(rezTakip_ui.aktivite_tableWidget))
         # self.rezervasyon_ekle()
-        self.musteri_ekle()
+        # self.musteri_ekle()
         # self.aktivite_ekle()
 
 
@@ -89,7 +89,7 @@ class rezTakip():
         sqlden_cagir_tabloya_dok(self.conn,self.curs,TABLO_REZERVASYONLAR,rezTakip_ui.rezervasyon_tableWidget)              
     
     def musteri_ekle(self):
-        sql_tabloya_ekle(self.conn,self.curs, f"{TABLO_MUSTERILER} {INSERT_MUSTERILER}", ("yurt2","05522612829"))
+        sql_tabloya_ekle(self.conn,self.curs, f"{TABLO_MUSTERILER} {INSERT_MUSTERILER}", ("--","05522612829"))
         sqlden_cagir_tabloya_dok(self.conn,self.curs,TABLO_MUSTERILER,rezTakip_ui.musteri_tableWidget)    
     
 def fiyatlari_topla(conn,curs,otel_adi,para_birimi):
