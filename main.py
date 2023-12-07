@@ -67,14 +67,14 @@ class rezTakip():
         rezTakip_ui.oteldenRezGetir_pushButton.clicked.connect(lambda : rezervasyon_oteladi_SCTD(
                 self.conn,self.curs,TABLO_REZERVASYONLAR,
                 rezTakip_ui.rezervasyon_tableWidget,
-                rezTakip_ui.musteri_tableWidget.item(rezTakip_ui.musteri_tableWidget.currentRow(),0).text())
-                ) if rezTakip_ui.musteri_tableWidget.item(rezTakip_ui.musteri_tableWidget.currentRow(),0) is not None else Exception("Lütfen önce otel seçiniz")
+                rezTakip_ui.musteri_tableWidget.item(rezTakip_ui.musteri_tableWidget.currentRow(),0))
+                ) 
     
         rezTakip_ui.aktivitedenRezGetir_pushButton.clicked.connect(lambda : rezervasyon_aktivite_SCTD(
                 self.conn,self.curs,TABLO_REZERVASYONLAR,
                 rezTakip_ui.rezervasyon_tableWidget,
-                rezTakip_ui.aktivite_tableWidget.item(rezTakip_ui.aktivite_tableWidget.currentRow(),0).text())
-                ) if rezTakip_ui.aktivite_tableWidget.item(rezTakip_ui.aktivite_tableWidget.currentRow(),0) is not None else Exception("Lütfen önce aktivite seçiniz")
+                rezTakip_ui.aktivite_tableWidget.item(rezTakip_ui.aktivite_tableWidget.currentRow(),0))
+                )
         
         rezTakip_ui.UygunRezAra_pushButton.clicked.connect(lambda : rezervasyon_tarih_SCTD(
                 self.conn,self.curs,TABLO_REZERVASYONLAR,
@@ -391,20 +391,31 @@ def sql_tabloya_ekle(conn,curs,tabloadi,veri):
 
 
 def rezervasyon_oteladi_SCTD(conn,curs,tablo_adi,tablo,otelAdi):
+    try:
+        otelAdi=otelAdi.text() if otelAdi != None else Exception("Otel seçiniz")
         curs.execute(f"SELECT * FROM {tablo_adi} WHERE otelAdi = ?",(otelAdi,))
         data=curs.fetchall()
         tabloya_dok(conn,curs,tablo,data)
-
+    except Exception as e:
+        print(e)
+        pass
+        # uyari_ver("!! Beklenmeyen bir hata oluştu !!")
 def rezervasyon_tarih_SCTD(conn,curs,tablo_adi,tablo,baslangic_tarihi,bitis_tarihi):
+
         curs.execute(f"SELECT * FROM {tablo_adi} WHERE rezDate BETWEEN ? AND ?",(baslangic_tarihi,bitis_tarihi))
         data=curs.fetchall()
         tabloya_dok(conn,curs,tablo,data)
 
 def rezervasyon_aktivite_SCTD(conn,curs,tablo_adi,tablo,aktivite):
+    try:
+        aktivite=aktivite.text() if aktivite != None else Exception("Aktivite seçiniz")
         curs.execute(f"SELECT * FROM {tablo_adi} WHERE aktivite = ?",(aktivite,))
         data=curs.fetchall()
         tabloya_dok(conn,curs,tablo,data) 
-
+    except Exception as e:
+        print(e)
+        pass
+        # uyari_ver("!! Beklenmeyen bir hata oluştu !!")
 def sqlden_cagir_tabloya_dok(conn,curs,tablo_adi,tablo):
         curs.execute(f"SELECT * FROM {tablo_adi}")
         data=curs.fetchall()
@@ -544,7 +555,7 @@ def hucre_renklendir(tablo,row,column,color):
             item.setBackground(color)
 
 def tabloları_excel_aktar():
-    # try:
+    try:
         aktivite_liste=[[rezTakip_ui.aktivite_tableWidget.horizontalHeaderItem(i).text() for i in range(rezTakip_ui.aktivite_tableWidget.columnCount()-2)]]
         for satir in range(rezTakip_ui.aktivite_tableWidget.rowCount()):
             satir_liste=[]
@@ -577,8 +588,8 @@ def tabloları_excel_aktar():
                 satir_liste.append(rezTakip_ui.musteri_tableWidget.item(satir,sutun).text())
             musteri_liste.append(satir_liste)
         excele_yaz([aktivite_liste,rezervasyon_liste,musteri_liste],"Output")
-    # except Exception as e:
-    #     uyari_ver(str(e),5000)
+    except Exception as e:
+        uyari_ver(str(e),5000)
 
 
 # Arka plan rengini ayarlamak için doldurma nesnesi oluştur
@@ -590,7 +601,7 @@ def excele_yaz(liste,dosyaAdi):
     workbook = Workbook()
     for index,sayfa in enumerate(liste):
         sayfa_adi = "Aktiviteler" if index==0 else "Rezervasyonlar" if index==1 else "Müşteriler"
-        sheet = workbook.create_sheet("output",index)
+        sheet = workbook.create_sheet(sayfa_adi,index=index)
         row=1
         sayac = 0
         for satir in sayfa:
@@ -606,7 +617,13 @@ def excele_yaz(liste,dosyaAdi):
                 fill=fillSari
             for cell,col in zip(satir,sutunList):
                 sheet[f'{col}{row}'] = f'{cell}'
-                sheet[f'{col}{row}'].fill= fill
+
+                if sayfa_adi=="Rezervasyonlar" and (col=="G" or col=="H"):
+                    sheet[f'{col}{row}'].fill= fillKirmizi
+                
+                else:    
+                    sheet[f'{col}{row}'].fill= fill
+                    
                 sheet[f'{col}{row}'].font = font
             row+=1
             sayac+=1
