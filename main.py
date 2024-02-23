@@ -128,7 +128,7 @@ class rezTakip():
     def satir_ekle(self, tablo):
         global otelAdi_rezervasyon_combo_data , aktivite_rezervasyon_combo_data
         row = tablo.rowCount() 
-        son = tablo.columnCount() - 2
+        son = tablo.columnCount() 
         # Check if the row index is within the valid range
         if row >= 0:
             # Check if the widget in the specified cell is None
@@ -388,7 +388,7 @@ class rezTakip():
                         harcama_button = QPushButton("Harcama Ekle")
                         harcama_button.setStyleSheet("background-color: rgb(125,125,250);font-size : 14px; font-family : Times New Roman")
                         harcama_button.setMaximumWidth(100)
-                        harcama_button.clicked.connect(lambda : rezTakip().harcama_ekrani_ac())
+                        harcama_button.clicked.connect(lambda : rezTakip().harcama_ekrani_ac(Table=True))
                         tablo.setCellWidget(satir_index, sutun_index, harcama_button)
                         
                     elif sutun_index ==1:
@@ -464,18 +464,24 @@ class rezTakip():
     def show_context_menu(self):
         context_menu = QMenu(rezTakip_ui.aktivite_tableWidget)
         
-        action_delete = context_menu.addAction("Satır Sil")
-        action_update = context_menu.addAction("Satır Güncelle")
         if rezTakip_ui.tabWidget.currentIndex()==0:
+            action_delete = context_menu.addAction("Aktivite Sil")
+            action_update = context_menu.addAction("Aktivite Güncelle")
             action_delete.triggered.connect(lambda : self.delete_function(TABLO_AKTIVITELER,"aktivite",rezTakip_ui.aktivite_tableWidget))
             action_update.triggered.connect(lambda : self.tablo_update_aktivite())
         
         elif rezTakip_ui.tabWidget.currentIndex()==1:
+            action_delete = context_menu.addAction("Rezervasyon Sil")
+            action_update = context_menu.addAction("Rezervasyon Güncelle")
             action_delete.triggered.connect( lambda : self.delete_function(TABLO_REZERVASYONLAR,"rezID",rezTakip_ui.rezervasyon_tableWidget))
             action_update.triggered.connect(lambda : self.tablo_update_rezervasyon())
+            
         elif rezTakip_ui.tabWidget.currentIndex()==2:
+            action_delete = context_menu.addAction("Müşteri Sil")  
+            action_update = context_menu.addAction("Müşteri Güncelle")
             action_delete.triggered.connect( lambda : self.delete_function(TABLO_MUSTERILER,"otelAdi",rezTakip_ui.musteri_tableWidget))     
-            action_update.triggered.connect(lambda : self.tablo_update_musteri())   
+            action_update.triggered.connect(lambda : self.tablo_update_musteri())
+               
         action_exceleYaz = context_menu.addAction("Excel'e Aktar")
         action_exceleYaz.triggered.connect(lambda : self.tabloları_excel_aktar())
         context_menu.exec_(QCursor.pos())
@@ -563,20 +569,20 @@ class rezTakip():
 
     def tabloları_excel_aktar(self):
         try:
-            aktivite_liste=[[rezTakip_ui.aktivite_tableWidget.horizontalHeaderItem(i).text() for i in range(rezTakip_ui.aktivite_tableWidget.columnCount()-2)]]
+            aktivite_liste=[[rezTakip_ui.aktivite_tableWidget.horizontalHeaderItem(i).text() for i in range(rezTakip_ui.aktivite_tableWidget.columnCount())]]
             for satir in range(rezTakip_ui.aktivite_tableWidget.rowCount()):
                 satir_liste=[]
-                for sutun in range(rezTakip_ui.aktivite_tableWidget.columnCount()-2):
+                for sutun in range(rezTakip_ui.aktivite_tableWidget.columnCount()):
                     if sutun==0:
                         satir_liste.append(rezTakip_ui.aktivite_tableWidget.item(satir,sutun).text())
                     else:
                         satir_liste.append(rezTakip_ui.aktivite_tableWidget.cellWidget(satir,sutun).value())
                 aktivite_liste.append(satir_liste)
             
-            rezervasyon_liste=[[rezTakip_ui.rezervasyon_tableWidget.horizontalHeaderItem(i).text() for i in range(rezTakip_ui.rezervasyon_tableWidget.columnCount()-2)]]
+            rezervasyon_liste=[[rezTakip_ui.rezervasyon_tableWidget.horizontalHeaderItem(i).text() for i in range(rezTakip_ui.rezervasyon_tableWidget.columnCount())]]
             for satir in range(rezTakip_ui.rezervasyon_tableWidget.rowCount()):
                 satir_liste=[]
-                for sutun in range(rezTakip_ui.rezervasyon_tableWidget.columnCount()-2):
+                for sutun in range(rezTakip_ui.rezervasyon_tableWidget.columnCount()):
                     
                     if sutun==4:
                         satir_liste.append(rezTakip_ui.rezervasyon_tableWidget.cellWidget(satir,sutun).date().toPyDate())
@@ -588,10 +594,10 @@ class rezTakip():
                         satir_liste.append(rezTakip_ui.rezervasyon_tableWidget.cellWidget(satir,sutun).currentText())
                 rezervasyon_liste.append(satir_liste)
             
-            musteri_liste=[]
+            musteri_liste=[[rezTakip_ui.musteri_tableWidget.horizontalHeaderItem(i).text() for i in range(rezTakip_ui.musteri_tableWidget.columnCount())]]
             for satir in range(rezTakip_ui.musteri_tableWidget.rowCount()):
                 satir_liste=[]
-                for sutun in range(rezTakip_ui.musteri_tableWidget.columnCount()-2):
+                for sutun in range(rezTakip_ui.musteri_tableWidget.columnCount()):
                     satir_liste.append(rezTakip_ui.musteri_tableWidget.item(satir,sutun).text())
                 musteri_liste.append(satir_liste)
             excele_yaz([aktivite_liste,rezervasyon_liste,musteri_liste],"Output")
@@ -613,11 +619,23 @@ class rezTakip():
             else:
                 return False    
             
-    def harcama_ekrani_ac(self,Id=None,otelAdi=None,adSoyad=None,aktivite=None):  
-        self.harcama_Id=Id 
-        self.harcama_otelAdi=otelAdi
-        self.harcama_adSoyad=adSoyad
-        self.harcama_aktivite=aktivite
+    def harcama_ekrani_ac(self,Table=False):
+          
+        if Table:
+            try: 
+                sender_button = rezTakip_main_window.sender()
+                if sender_button:
+                    index = rezTakip_ui.rezervasyon_tableWidget.indexAt(sender_button.pos())
+                    if index.isValid():
+                        row = index.row()
+                        self.ID=rezTakip_ui.rezervasyon_tableWidget.item(row,0).text()
+                        self.harcama_adSoyad = rezTakip_ui.rezervasyon_tableWidget.item(row,3).text()
+                        harcama_ui.baslik_label.setText(self.harcama_adSoyad)
+                        self.harcama_rezervasyonTarihi = rezTakip_ui.rezervasyon_tableWidget.cellWidget(row,4).date().toPyDate()
+                        harcama_ui.Tarihbaslik_label.setText(str(self.harcama_rezervasyonTarihi))
+            except: rezTakip_ui.statusbar.showMessage("! Masa Silme İşleminde hata oluştu !",5000)
+        
+        
         harcama_main_window.show()
         harcama_ui.hesaplarTablosu.setColumnWidth(0,50)
         harcama_ui.hesaplarTablosu.setColumnWidth(1,50)
@@ -628,8 +646,8 @@ class rezTakip():
         harcama_ui.hesaplarTablosu.setColumnWidth(6,150)
         harcama_ui.hesaplarTablosu.setColumnWidth(7,60)
         
-        harcama_ui.comboBox_otel.addItems(self.otelAdi_combo_data)
-        harcama_ui.comboBox_aktivite.addItems(self.aktivite_combo_data)
+        # harcama_ui.comboBox_otel.addItems(self.otelAdi_combo_data)
+        # harcama_ui.comboBox_aktivite.addItems(self.aktivite_combo_data)
         harcama_ui.harcama_dateEdit.setCalendarPopup(True)
         
         self.hazir_paketler_doldur()
@@ -664,7 +682,7 @@ class rezTakip():
         harcama_ui.hesaplarTablosu.setItem(harcama_ui.hesaplarTablosu.rowCount()-1, 4, QTableWidgetItem(paketAdi))
         harcama_ui.hesaplarTablosu.setItem(harcama_ui.hesaplarTablosu.rowCount()-1, 5, QTableWidgetItem(fiyat))
 
-def hucre_renklendir(tablo,row,column,color):
+    def hucre_renklendir(self,tablo,row,column,color):
         item = tablo.item(row, column)
         if item:
             item.setBackground(color)

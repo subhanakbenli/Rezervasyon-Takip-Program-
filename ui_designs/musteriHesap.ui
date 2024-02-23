@@ -67,7 +67,7 @@
              </font>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="tab_4">
              <attribute name="title">
@@ -122,56 +122,6 @@
                  </font>
                 </property>
                </widget>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tab_5">
-             <attribute name="title">
-              <string>Tarih</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_7">
-              <property name="leftMargin">
-               <number>1</number>
-              </property>
-              <property name="topMargin">
-               <number>1</number>
-              </property>
-              <property name="rightMargin">
-               <number>1</number>
-              </property>
-              <property name="bottomMargin">
-               <number>1</number>
-              </property>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,2">
-                <item>
-                 <widget class="QLabel" name="label">
-                  <property name="font">
-                   <font>
-                    <family>Times New Roman</family>
-                    <pointsize>10</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Harcama Tarihi:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QDateEdit" name="harcama_dateEdit">
-                  <property name="font">
-                   <font>
-                    <family>Times New Roman</family>
-                    <pointsize>12</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
               </item>
              </layout>
             </widget>
@@ -617,7 +567,7 @@
              <number>1</number>
             </property>
             <property name="columnCount">
-             <number>8</number>
+             <number>7</number>
             </property>
             <attribute name="horizontalHeaderDefaultSectionSize">
              <number>145</number>
@@ -657,11 +607,6 @@
             </column>
             <column>
              <property name="text">
-              <string>Harcama Tarihi</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
               <string>Ad-Soyad</string>
              </property>
             </column>
@@ -685,7 +630,7 @@
               <string>Ödendi</string>
              </property>
             </column>
-            <item row="0" column="5">
+            <item row="0" column="4">
              <property name="text">
               <string/>
              </property>
