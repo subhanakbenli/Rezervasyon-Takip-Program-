@@ -628,8 +628,10 @@ class rezTakip():
                     index = rezTakip_ui.rezervasyon_tableWidget.indexAt(sender_button.pos())
                     if index.isValid():
                         row = index.row()
-                        self.ID=rezTakip_ui.rezervasyon_tableWidget.item(row,0).text()
+                        self.harcama_RID=rezTakip_ui.rezervasyon_tableWidget.item(row,0).text()
                         self.harcama_adSoyad = rezTakip_ui.rezervasyon_tableWidget.item(row,3).text()
+                        self.harcama_otelAdi = rezTakip_ui.rezervasyon_tableWidget.cellWidget(row, 2).currentText()
+                        
                         harcama_ui.baslik_label.setText(self.harcama_adSoyad)
                         self.harcama_rezervasyonTarihi = rezTakip_ui.rezervasyon_tableWidget.cellWidget(row,4).date().toPyDate()
                         harcama_ui.Tarihbaslik_label.setText(str(self.harcama_rezervasyonTarihi))
@@ -639,16 +641,14 @@ class rezTakip():
         harcama_main_window.show()
         harcama_ui.hesaplarTablosu.setColumnWidth(0,50)
         harcama_ui.hesaplarTablosu.setColumnWidth(1,50)
-        harcama_ui.hesaplarTablosu.setColumnWidth(2,140)
-        harcama_ui.hesaplarTablosu.setColumnWidth(3,165)
-        harcama_ui.hesaplarTablosu.setColumnWidth(4,165)
-        harcama_ui.hesaplarTablosu.setColumnWidth(5,165)
-        harcama_ui.hesaplarTablosu.setColumnWidth(6,150)
-        harcama_ui.hesaplarTablosu.setColumnWidth(7,60)
+        harcama_ui.hesaplarTablosu.setColumnWidth(2,200)
+        harcama_ui.hesaplarTablosu.setColumnWidth(3,200)
+        harcama_ui.hesaplarTablosu.setColumnWidth(4,200)
+        harcama_ui.hesaplarTablosu.setColumnWidth(5,150)
+        harcama_ui.hesaplarTablosu.setColumnWidth(6,50)
         
         # harcama_ui.comboBox_otel.addItems(self.otelAdi_combo_data)
         # harcama_ui.comboBox_aktivite.addItems(self.aktivite_combo_data)
-        harcama_ui.harcama_dateEdit.setCalendarPopup(True)
         
         self.hazir_paketler_doldur()
     
@@ -668,8 +668,9 @@ class rezTakip():
             row = harcama_ui.paketlerTablosu.currentRow()
             paketAdi = harcama_ui.paketlerTablosu.item( row, 0).text()
             fiyat = harcama_ui.paketlerTablosu.item( row, 1).text()
+            print("---*")
             self.hesaplar_tablosu_ekle(paketAdi,fiyat) 
-            self.kullac
+            print("-+/+/+/+/+/+/+")
               
         except Exception as e:
             uyari_ver(str(e))
@@ -677,10 +678,17 @@ class rezTakip():
     
           
     def hesaplar_tablosu_ekle(self,paketAdi,fiyat):
-       
-        harcama_ui.hesaplarTablosu.setRowCount(harcama_ui.hesaplarTablosu.rowCount() + 1)
-        harcama_ui.hesaplarTablosu.setItem(harcama_ui.hesaplarTablosu.rowCount()-1, 4, QTableWidgetItem(paketAdi))
-        harcama_ui.hesaplarTablosu.setItem(harcama_ui.hesaplarTablosu.rowCount()-1, 5, QTableWidgetItem(fiyat))
+        try:
+            print(self.harcama_RID)
+            harcama_ui.hesaplarTablosu.setRowCount(harcama_ui.hesaplarTablosu.rowCount() + 1)
+            row=harcama_ui.hesaplarTablosu.rowCount()-1
+            harcama_ui.hesaplarTablosu.setItem(row, 0, QTableWidgetItem(str(self.harcama_RID)))
+            harcama_ui.hesaplarTablosu.setItem(row, 2, QTableWidgetItem(str(self.harcama_adSoyad)))
+            harcama_ui.hesaplarTablosu.setItem(row, 3, QTableWidgetItem(str(self.harcama_otelAdi)))
+            harcama_ui.hesaplarTablosu.setItem(row, 4, QTableWidgetItem(paketAdi))
+            harcama_ui.hesaplarTablosu.setItem(row, 5, QTableWidgetItem(fiyat))
+        except:
+            pass
 
     def hucre_renklendir(self,tablo,row,column,color):
         item = tablo.item(row, column)
@@ -693,7 +701,7 @@ def excele_yaz(liste,dosyaAdi):
     from openpyxl import Workbook
     fillSari    = PatternFill(start_color='FFFF00', end_color='FFFF00', fill_type='solid')  # Burada sarı renk seçildi
     fillYesil   = PatternFill(start_color='00FF00', end_color='00FF00', fill_type='solid')  # Burada yeşil renk seçildi
-    fillKirmizi = PatternFill(start_color='FF0000', end_color='FF0000', fill_type='solid')  # Burada kırmızı renk seçildi
+    fillKirmizi = PatternFill(start_color='FF0000', end_color='CC0000', fill_type='solid')  # Burada kırmızı renk seçildi
     fillMavi    = PatternFill(start_color='66CCFF', end_color='66CCFF', fill_type='solid')  # Burada mavi renk seçildi
     workbook = Workbook()
     for index,sayfa in enumerate(liste):
@@ -715,7 +723,7 @@ def excele_yaz(liste,dosyaAdi):
             for cell,col in zip(satir,sutunList):
                 sheet[f'{col}{row}'] = f'{cell}'
 
-                if sayfa_adi=="Rezervasyonlar" and (col=="G" or col=="H"):
+                if sayfa_adi=="Rezervasyonlar" and (col=="G" or col=="H") and sayac!=0:
                     sheet[f'{col}{row}'].fill= fillKirmizi
                 
                 else:    
