@@ -7,7 +7,6 @@ from datetime import datetime,timedelta
 from ui_designs.rezTakip_ui import * 
 from PyQt5.QtCore import QDate, Qt
 from PyQt5.QtGui import QCursor
-from PyQt5.QtGui import QColor
 
 from ui_designs.musteriHesap_ui import *
 TABLO_AKTIVITELER="aktiviteler"
@@ -20,16 +19,21 @@ TABLO_MUSTERILER="musteriler"
 INSERT_MUSTERILER="(otelAdi,telefon)"
 
 TABLO_HARCAMA="harcama"
-INSERT_HARCAMA="(rezId,otelAdi,adSoyad,harcamatarihi,paketAdi,tutar,odendi)"
+INSERT_HARCAMA="(rezId,HarcamaId,harcamatarihi,paketAdi,tutar,odendi)"
 
 TABLO_PAKETLER="paketler"
 INSERT_PAKETLER="(paketAdi,tutar)"
+
 Uygulama = QApplication(sys.argv)
 rezTakip_main_window = QMainWindow()
 rezTakip_ui = Ui_rezTakip_MainWindow()
 rezTakip_ui.setupUi(rezTakip_main_window)
 rezTakip_ui.statusbar.setStyleSheet("font: 75 13pt 'Times New Roman'; background-color:rgb(200,200,200)")
 
+harcama_main_window = QMainWindow()
+harcama_ui = Ui_hesap_MainWindow()
+harcama_ui.setupUi(harcama_main_window)
+harcama_ui.statusbar.setStyleSheet("font: 75 13pt 'Times New Roman'; background-color:rgb(200,200,200)")
 
 
 from PyQt5.QtWidgets import QMenu, QTableWidgetItem
@@ -73,8 +77,8 @@ class rezTakip():
                         (otelAdi Text PRIMARY KEY,telefon Text)")
         
         self.curs.execute("CREATE TABLE IF NOT EXISTS harcama \
-            (rezId INT,HarcamaId INTEGER PRIMARY KEY AUTOINCREMENT,otelAdi Text,\
-                            adSoyad TEXT,harcamatarihi Date,paketAdi Text,tutar Int,odendi Boolean)") #kişilerin ödemesi gereken tutar ve harcamalar
+            (rezId INT,HarcamaId INTEGER PRIMARY KEY AUTOINCREMENT,aktivite Text ,otelAdi Text,\
+                            adSoyad TEXT,harcamatarihi Date,paketAdi Text,tutar Int,odendi Text)") #kişilerin ödemesi gereken tutar ve harcamalar
         
         self.curs.execute("CREATE TABLE IF NOT EXISTS paketler (paketAdi Text PRIMARY KEY,tutar Int)") #kişilerin ödemesi gereken tutar ve harcamalar
         
@@ -111,9 +115,12 @@ class rezTakip():
                 rezTakip_ui.cikis_dateEdit.date().toPyDate())
                 )
         
-        rezTakip_ui.pushButton_harcamaEkle.clicked.connect(lambda : harcamaTakip(self.conn,self.curs).harcama_ekrani_ac())
+        rezTakip_ui.pushButton_harcamaEkle.clicked.connect(lambda : self.harcama_ekrani_ac())
+        self.double_click_executed = False
+        harcama_ui.paketlerTablosu.doubleClicked.connect(lambda : print("hello"))
 
-        
+        harcama_ui.harcamaEkle_pushButton.clicked.connect(lambda : self.hazir_harcama_ekle())
+        harcama_ui.ozelharcamaEkle_pushButton.clicked.connect(lambda : self.ozel_harcama_ekle())
         # context menu
         rezTakip_ui.aktivite_tableWidget.setContextMenuPolicy(Qt.CustomContextMenu)
         rezTakip_ui.aktivite_tableWidget.customContextMenuRequested.connect(self.show_context_menu)
@@ -122,7 +129,8 @@ class rezTakip():
         rezTakip_ui.musteri_tableWidget.setContextMenuPolicy(Qt.CustomContextMenu)
         rezTakip_ui.musteri_tableWidget.customContextMenuRequested.connect(self.show_context_menu)
         
-        
+
+    
     def satir_ekle(self, tablo):
         global otelAdi_rezervasyon_combo_data , aktivite_rezervasyon_combo_data
         row = tablo.rowCount() 
@@ -132,21 +140,20 @@ class rezTakip():
             # Check if the widget in the specified cell is None
             widget = tablo.cellWidget(row-1, son)
 
-            
-            # if widget is not None and isinstance(widget, QPushButton) and widget.text() != "Kaydet":
-            sender_button=rezTakip_main_window.sender()
-            if isinstance(widget, CustomSpinBox):
-                uyari_ver("Lütfen önce mevcut satırı kaydedin", 5000)
-            elif sender_button.text() == "Rezervasyon Yap" or sender_button.text() == "Aktivite Ekle" or sender_button.text() == "Müşteri Ekle":
+            if widget is not None and isinstance(widget, QPushButton) and widget.text() != "Kaydet":
                 tablo.setRowCount(row + 1)
                 v_scroll_bar = tablo.verticalScrollBar()
                 v_scroll_bar.setValue(v_scroll_bar.maximum())
+                save_button = QPushButton("Kaydet")
+                save_button.setStyleSheet("background-color: rgb(105,255,105)")
+                save_button.setMaximumWidth(125)        
+                tablo.setCellWidget(row, son, save_button)
                 
                 # Make sure to connect the correct method to the button click event
                 if tablo == rezTakip_ui.aktivite_tableWidget:
-                    rezTakip_ui.aktEkle_pushButton.setText("Aktivite Kaydet")
+                    save_button.clicked.connect(lambda: self.aktivite_kaydet())
                 elif tablo == rezTakip_ui.rezervasyon_tableWidget:
-                    rezTakip_ui.rezYap_pushButton.setText("Rezervasyon Kaydet")
+                    save_button.clicked.connect(lambda: self.rezervasyon_kaydet())
                     
                     aktivite_combo=CustomComboBox()
                     aktivite_combo.addItem("--")
@@ -173,21 +180,9 @@ class rezTakip():
                     tablo.setCellWidget(row , 7,birim_combo)
                     
                 elif tablo == rezTakip_ui.musteri_tableWidget:
-                    rezTakip_ui.musEkle_pushButton.setText("Müşteri Kaydet")
-            
+                    save_button.clicked.connect(lambda: self.musteri_kaydet())
             else:
-                if tablo==rezTakip_ui.aktivite_tableWidget:
-                    result=self.aktivite_kaydet()
-                    if result:
-                        rezTakip_ui.aktEkle_pushButton.setText("Aktivite Ekle")
-                elif tablo==rezTakip_ui.rezervasyon_tableWidget:
-                    result=self.rezervasyon_kaydet()
-                    if result:
-                        rezTakip_ui.rezYap_pushButton.setText("Rezervasyon Yap")
-                elif tablo==rezTakip_ui.musteri_tableWidget:
-                    result=self.musteri_kaydet()
-                    if result:
-                        rezTakip_ui.musEkle_pushButton.setText("Müşteri Ekle")
+                uyari_ver("Lütfen önceki satırı kaydediniz", 5000)
         else:
             uyari_ver("Geçerli bir satır indeksi bulunamadı", 5000)
 
@@ -197,7 +192,7 @@ class rezTakip():
             try:
                 aktivite = rezTakip_ui.aktivite_tableWidget.item(row, 0).text()
             except:
-                raise Exception("Aktivite adı boş bırakılamaz!!")
+                raise Exception("Aktivite adı boş bırakılamaz")
             try:
                 tl = rezTakip_ui.aktivite_tableWidget.item(row, 1).text()
             except:
@@ -217,10 +212,8 @@ class rezTakip():
             print(aktivite,tl,dolar,euro,kart)
             self.sql_tabloya_ekle(TABLO_AKTIVITELER, (aktivite,tl,dolar,euro,kart))
             self.sqlden_cagir_tabloya_dok(TABLO_AKTIVITELER,rezTakip_ui.aktivite_tableWidget)
-            return True
         except Exception as e:
             uyari_ver(str(e))
-            return False
 
     def rezervasyon_kaydet(self):
         try:
@@ -256,10 +249,8 @@ class rezTakip():
                 uyari_ver("Bu aktivite için fiyat bulunamadı !!")
                 return
             print(aktivite,otel_adi,ad_soyad,rezervasyon_tarihi,telefon,para_birimi)
-            return True
-        except Exception as e:
-            uyari_ver(str(e))
-            return False
+        except:
+            uyari_ver("!! Beklenmeyen bir hata oluştu -rezervasyon_kaydet-!!")  
 
     def musteri_kaydet(self):    
         try:
@@ -273,10 +264,8 @@ class rezTakip():
             self.sql_tabloya_ekle(f"{TABLO_MUSTERILER} {INSERT_MUSTERILER}", (otel_adi,telefon))
             self.sqlden_cagir_tabloya_dok(TABLO_MUSTERILER,rezTakip_ui.musteri_tableWidget)
             
-            return True
-        except Exception as e:
-            uyari_ver(str(e))
-            return False
+        except:
+            uyari_ver("!! Beklenmeyen bir hata oluştu -musteri_kaydet-!!")
 
 
         
@@ -313,7 +302,6 @@ class rezTakip():
             uyari_ver(str(e))
 
 
-
     def rezervasyon_oteladi_SCTD(self,tablo_adi,tablo,otelAdi):
             curs=self.curs
             conn=self.conn
@@ -340,9 +328,7 @@ class rezTakip():
         curs.execute(f"SELECT * FROM {tablo_adi} WHERE aktivite = ?",(aktivite,))
         data=curs.fetchall()
         self.tabloya_dok(tablo,data) 
-
-    
-    
+  
     def sqlden_cagir_tabloya_dok(self,tablo_adi,tablo):
         curs=self.curs
         conn=self.conn
@@ -405,7 +391,7 @@ class rezTakip():
                         harcama_button = QPushButton("Harcama Ekle")
                         harcama_button.setStyleSheet("background-color: rgb(125,125,250);font-size : 14px; font-family : Times New Roman")
                         harcama_button.setMaximumWidth(100)
-                        harcama_button.clicked.connect(lambda : harcamaTakip(conn,curs).harcama_ekrani_ac(Table=True))
+                        harcama_button.clicked.connect(lambda : rezTakip().harcama_ekrani_ac(Table=True))
                         tablo.setCellWidget(satir_index, sutun_index, harcama_button)
                         
                     elif sutun_index ==1:
@@ -475,7 +461,6 @@ class rezTakip():
                         
                     else: 
                         tablo.setColumnWidth(sutun_index, 150)
-
 
 
     def show_context_menu(self):
@@ -621,6 +606,7 @@ class rezTakip():
         except Exception as e:
             uyari_ver(str(e))
 
+
         
     def checkEvent(self,title,question):
             close = QMessageBox()
@@ -634,20 +620,7 @@ class rezTakip():
                 return True
             else:
                 return False    
-
-class harcamaTakip(): 
-    def __init__(self,conn,cursor):
-        
-        self.harcama_main_window = QMainWindow()
-        self.harcama_ui = Ui_hesap_MainWindow()
-        self.harcama_ui.setupUi(self.harcama_main_window)
-        self.harcama_ui.statusbar.setStyleSheet("font: 75 13pt 'Times New Roman'; background-color:rgb(200,200,200)")
-        self.conn=conn
-        self.curs=cursor
-
-        self.harcama_ui.harcamaEkle_pushButton.clicked.connect(lambda : self.hazir_harcama_ekle())
-        
-           
+            
     def harcama_ekrani_ac(self,Table=False):
           
         if Table:
@@ -657,122 +630,85 @@ class harcamaTakip():
                     index = rezTakip_ui.rezervasyon_tableWidget.indexAt(sender_button.pos())
                     if index.isValid():
                         row = index.row()
-                        self.harcama_RID=rezTakip_ui.rezervasyon_tableWidget.item(row,0).text()
-                        self.harcama_adSoyad = rezTakip_ui.rezervasyon_tableWidget.item(row,3).text()
-                        self.harcama_otelAdi = rezTakip_ui.rezervasyon_tableWidget.cellWidget(row, 2).currentText()
+                        global harcama_RID, harcama_adSoyad, harcama_otelAdi, harcama_rezervasyonTarihi
+                        harcama_RID=rezTakip_ui.rezervasyon_tableWidget.item(row,0).text()
+                        harcama_adSoyad = rezTakip_ui.rezervasyon_tableWidget.item(row,3).text()
+                        harcama_otelAdi = rezTakip_ui.rezervasyon_tableWidget.cellWidget(row, 2).currentText()
                         
-                        self.harcama_ui.baslik_label.setText(self.harcama_adSoyad)
-                        self.harcama_rezervasyonTarihi = rezTakip_ui.rezervasyon_tableWidget.cellWidget(row,4).date().toPyDate()
-                        self.harcama_ui.Tarihbaslik_label.setText(str(self.harcama_rezervasyonTarihi))
-            except: rezTakip_ui.statusbar.showMessage("! hata oluştu !",5000)
+                        harcama_ui.baslik_label.setText(harcama_adSoyad)
+                        harcama_rezervasyonTarihi = rezTakip_ui.rezervasyon_tableWidget.cellWidget(row,4).date().toPyDate()
+                        harcama_ui.Tarihbaslik_label.setText(str(harcama_rezervasyonTarihi))
+            except: rezTakip_ui.statusbar.showMessage("! Masa Silme İşleminde hata oluştu !",5000)
         
         
-        self.harcama_main_window.show()
-        self.harcama_ui.hesaplarTablosu.clearContents()
-        self.harcama_ui.hesaplarTablosu.setColumnWidth(0,50)
-        self.harcama_ui.hesaplarTablosu.setColumnWidth(1,50)
-        self.harcama_ui.hesaplarTablosu.setColumnWidth(2,200)
-        self.harcama_ui.hesaplarTablosu.setColumnWidth(3,200)
-        self.harcama_ui.hesaplarTablosu.setColumnWidth(4,200)
-        self.harcama_ui.hesaplarTablosu.setColumnWidth(5,150)
-        self.harcama_ui.hesaplarTablosu.setColumnWidth(6,50)
+        harcama_main_window.show()
+        harcama_ui.hesaplarTablosu.clearContents()
+        harcama_ui.hesaplarTablosu.setColumnWidth(0,50)
+        harcama_ui.hesaplarTablosu.setColumnWidth(1,50)
+        harcama_ui.hesaplarTablosu.setColumnWidth(2,200)
+        harcama_ui.hesaplarTablosu.setColumnWidth(3,200)
+        harcama_ui.hesaplarTablosu.setColumnWidth(4,200)
+        harcama_ui.hesaplarTablosu.setColumnWidth(5,150)
+        harcama_ui.hesaplarTablosu.setColumnWidth(6,50)
         
-
-        self.harcama_tablosu_doldur()
+        # harcama_ui.comboBox_otel.addItems(self.otelAdi_combo_data)
+        # harcama_ui.comboBox_aktivite.addItems(self.aktivite_combo_data)
         
         self.hazir_paketler_doldur()
     
-    def harcama_tablosu_doldur(self):
-        self.curs.execute(f"SELECT rezId,HarcamaId,otelAdi,adSoyad,paketAdi,tutar,odendi FROM {TABLO_HARCAMA} Where rezID = ?",(self.harcama_RID,))
-        data = self.curs.fetchall()
-        print(data)
-
-        self.harcama_ui.hesaplarTablosu.setRowCount(len(data))
-        row=0
-        for rezId,HarcamaId,otelAdi,adSoyad,paketAdi,tutar,odendi in data:
-            
-            self.harcama_ui.hesaplarTablosu.setItem(row, 0, QTableWidgetItem(str(rezId)))
-            self.harcama_ui.hesaplarTablosu.setItem(row, 1, QTableWidgetItem(str(HarcamaId)))
-            self.harcama_ui.hesaplarTablosu.setItem(row, 2, QTableWidgetItem(str(otelAdi)))
-            self.harcama_ui.hesaplarTablosu.setItem(row, 3, QTableWidgetItem(str(adSoyad)))
-            self.harcama_ui.hesaplarTablosu.setItem(row, 4, QTableWidgetItem(str(paketAdi)))
-            self.harcama_ui.hesaplarTablosu.setItem(row, 5, QTableWidgetItem(str(tutar)))
-            check_box = QCheckBox()
-            check_box.setChecked(odendi)
-            self.harcama_ui.hesaplarTablosu.setCellWidget(row, 6, check_box)
-            check_box.stateChanged.connect(lambda state, row=row: self.check_box_changed())
-            if odendi:
-                self.setRowColor(self.harcama_ui.hesaplarTablosu,row,QColor(0,200,0))
-            
-            row+=1
-            
-    def check_box_changed(self,):
-        try:
-            row=-1
-            sender_box=rezTakip_main_window.sender()
-            if sender_box:
-                    index = rezTakip_ui.rezervasyon_tableWidget.indexAt(sender_box.pos())
-                    row=index.row()
-            check_box = self.harcama_ui.hesaplarTablosu.cellWidget(row, 6)
-            if check_box.isChecked():
-                self.curs.execute(f"UPDATE {TABLO_HARCAMA} SET odendi = ? WHERE HarcamaId = ?",(True,self.harcama_ui.hesaplarTablosu.item(row,1).text()))
-                self.conn.commit()
-                self.setRowColor(self.harcama_ui.hesaplarTablosu,row,QColor(0,200,0))
-            else:
-                self.curs.execute(f"UPDATE {TABLO_HARCAMA} SET odendi = ? WHERE HarcamaId = ?",(False,self.harcama_ui.hesaplarTablosu.item(row,1).text()))
-                self.conn.commit()
-                self.setRowColor(self.harcama_ui.hesaplarTablosu,row,QColor(200,0,0))
-        except Exception as e:
-            uyari_ver(str(e))
-            
-            
-            
+    
     def hazir_paketler_doldur(self):
         self.curs.execute(f"SELECT * FROM {TABLO_PAKETLER}")
         data = self.curs.fetchall()
-        self.harcama_ui.paketlerTablosu.setRowCount(len(data))
+        harcama_ui.paketlerTablosu.setRowCount(len(data))
         for satir_index, satir in enumerate(data):
             for sutun_index, hucre_verisi in enumerate(satir):
                 hucre = QTableWidgetItem(str(hucre_verisi))
-                self.harcama_ui.paketlerTablosu.setItem(satir_index, sutun_index, hucre)
-                
+                harcama_ui.paketlerTablosu.setItem(satir_index, sutun_index, hucre)
+    
+    def ozel_harcama_ekle(self):
+        print("ozel_harcama_ekle")
+        # try:
+        #     paketAdi = harcama_ui.comboBox_aktivite.currentText()
+        #     fiyat = harcama_ui.lineEdit_fiyat.text()
+        #     self.hesaplar_tablosu_ekle(paketAdi,fiyat) 
+        #     print("-+/+/+/+/+/+/+")
+              
+        # except Exception as e:
+        #     uyari_ver(str(e))
     
     def hazir_harcama_ekle(self):
-        try:
-            row = self.harcama_ui.paketlerTablosu.currentRow()
-            paketAdi = self.harcama_ui.paketlerTablosu.item( row, 0).text()
-            fiyat = self.harcama_ui.paketlerTablosu.item( row, 1).text()
-            self.hesaplar_tablosu_ekle(paketAdi,fiyat) 
+        print("hazir_harcama_ekle")
+        # try:
+        #     row = harcama_ui.paketlerTablosu.currentRow()
+        #     paketAdi = harcama_ui.paketlerTablosu.item( row, 0).text()
+        #     fiyat = harcama_ui.paketlerTablosu.item( row, 1).text()
+        #     self.hesaplar_tablosu_ekle(paketAdi,fiyat) 
+        #     print("-+/+/+/+/+/+/+")
               
-        except Exception as e:
-            uyari_ver(str(e))
-
- 
+        # except Exception as e:
+        #     uyari_ver(str(e))
+    
+    
+          
     def hesaplar_tablosu_ekle(self,paketAdi,fiyat):
         try:
-            
-            self.harcama_ui.hesaplarTablosu.setRowCount(self.harcama_ui.hesaplarTablosu.rowCount() + 1)
-            row=self.harcama_ui.hesaplarTablosu.rowCount()-1
-            self.harcama_ui.hesaplarTablosu.setItem(row, 0, QTableWidgetItem(str(self.harcama_RID)))
-            self.harcama_ui.hesaplarTablosu.setItem(row, 2, QTableWidgetItem(str(self.harcama_adSoyad)))
-            self.harcama_ui.hesaplarTablosu.setItem(row, 3, QTableWidgetItem(str(self.harcama_otelAdi)))
-            self.harcama_ui.hesaplarTablosu.setItem(row, 4, QTableWidgetItem(paketAdi))
-            self.harcama_ui.hesaplarTablosu.setItem(row, 5, QTableWidgetItem(fiyat))
-            check_box = QCheckBox()
-            self.harcama_ui.hesaplarTablosu.setCellWidget(row, 6, check_box)
-            
-            self.curs.execute(f"INSERT INTO {TABLO_HARCAMA} {INSERT_HARCAMA} VALUES(?,?,?,?,?,?,?)",(self.harcama_RID,self.harcama_otelAdi,self.harcama_adSoyad,self.harcama_rezervasyonTarihi,paketAdi,fiyat,True))
-            self.conn.commit()
+            global harcama_RID, harcama_adSoyad, harcama_otelAdi, harcama_rezervasyonTarihi
+            harcama_ui.hesaplarTablosu.setRowCount(harcama_ui.hesaplarTablosu.rowCount() + 1)
+            row=harcama_ui.hesaplarTablosu.rowCount()-1
+            harcama_ui.hesaplarTablosu.setItem(row, 0, QTableWidgetItem(str(harcama_RID)))
+            harcama_ui.hesaplarTablosu.setItem(row, 2, QTableWidgetItem(str(harcama_adSoyad)))
+            harcama_ui.hesaplarTablosu.setItem(row, 3, QTableWidgetItem(str(harcama_otelAdi)))
+            harcama_ui.hesaplarTablosu.setItem(row, 4, QTableWidgetItem(paketAdi))
+            harcama_ui.hesaplarTablosu.setItem(row, 5, QTableWidgetItem(fiyat))
             return True
         except Exception as a:
-            print(str(a))
             return False
 
-    def setRowColor(self,tablo,row, color):
-        for j in range(tablo.columnCount()):
-            item = tablo.item(row, j)
-            if item:
-                item.setBackground(color)
+    def hucre_renklendir(self,tablo,row,column,color):
+        item = tablo.item(row, column)
+        if item:
+            item.setBackground(color)
 
 
 def excele_yaz(liste,dosyaAdi):

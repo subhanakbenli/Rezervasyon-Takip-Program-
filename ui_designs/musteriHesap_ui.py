@@ -69,7 +69,7 @@ class Ui_hesap_MainWindow(object):
         self.gridLayout_2.addWidget(self.tabWidget_2, 0, 0, 1, 1)
         self.toolBox.addItem(self.page, "")
         self.page_2 = QtWidgets.QWidget()
-        self.page_2.setGeometry(QtCore.QRect(0, 0, 142, 185))
+        self.page_2.setGeometry(QtCore.QRect(0, 0, 379, 517))
         self.page_2.setObjectName("page_2")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.page_2)
         self.gridLayout_3.setContentsMargins(1, 1, 1, 1)
@@ -335,7 +335,7 @@ class Ui_hesap_MainWindow(object):
         hesap_MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(hesap_MainWindow)
-        self.toolBox.setCurrentIndex(0)
+        self.toolBox.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(1)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(hesap_MainWindow)
