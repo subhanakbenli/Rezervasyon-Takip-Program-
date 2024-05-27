@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1500</width>
+    <width>1547</width>
     <height>794</height>
    </rect>
   </property>
@@ -24,6 +24,14 @@
   <property name="windowTitle">
    <string>Rezervasyon Takip Ekranı</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normalon>icon.jpg</normalon>
+   </iconset>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
   <property name="styleSheet">
    <string notr="true">/*
 Ubuntu Style Sheet for QT Applications
@@ -33,7 +41,7 @@ Last updated: 01/10/2021 (dd/mm/yyyy), 15:18.
 Available at: https://github.com/GTRONICK/QSS/blob/master/Ubuntu.qss
 */
 QMainWindow {
-	background-color: rgb(210, 220, 255);
+	background-color: rgb(230,240,230);
 }
 QCheckBox {
 	padding:2px;
@@ -523,10 +531,19 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
 	background-color: #ffffff;
 }</string>
   </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Rounded</enum>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="font">
        <font>
         <family>Times New Roman</family>
@@ -578,6 +595,9 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
             <bold>true</bold>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 250, 255);</string>
+          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::DoubleClicked</set>
           </property>
@@ -609,7 +629,7 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
            <number>0</number>
           </property>
           <attribute name="horizontalHeaderDefaultSectionSize">
-           <number>180</number>
+           <number>350</number>
           </attribute>
           <attribute name="horizontalHeaderHighlightSections">
            <bool>true</bool>
@@ -752,6 +772,9 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
             <bold>false</bold>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(250, 255, 235);</string>
+          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::DoubleClicked</set>
           </property>
@@ -777,7 +800,7 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
            <number>0</number>
           </property>
           <attribute name="horizontalHeaderDefaultSectionSize">
-           <number>140</number>
+           <number>350</number>
           </attribute>
           <attribute name="horizontalHeaderStretchLastSection">
            <bool>true</bool>
@@ -834,6 +857,11 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
             <string>Para Birimi</string>
            </property>
           </column>
+          <column>
+           <property name="text">
+            <string>Ekstralar (TL)</string>
+           </property>
+          </column>
          </widget>
         </item>
         <item row="0" column="0">
@@ -843,7 +871,13 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
             <property name="title">
              <string>Rezervasyon Arama</string>
             </property>
-            <layout class="QGridLayout" name="gridLayout_5">
+            <property name="flat">
+             <bool>false</bool>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_5" columnstretch="1,1">
              <property name="leftMargin">
               <number>0</number>
              </property>
@@ -919,7 +953,7 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
                       </property>
                      </widget>
                     </item>
-                    <item row="2" column="0">
+                    <item row="3" column="0">
                      <widget class="QLabel" name="label_2">
                       <property name="font">
                        <font>
@@ -934,7 +968,7 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
                       </property>
                      </widget>
                     </item>
-                    <item row="2" column="1">
+                    <item row="3" column="1">
                      <widget class="QDateEdit" name="cikis_dateEdit">
                       <property name="font">
                        <font>
@@ -945,6 +979,19 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
                        </font>
                       </property>
                      </widget>
+                    </item>
+                    <item row="2" column="0">
+                     <spacer name="verticalSpacer">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>10</height>
+                       </size>
+                      </property>
+                     </spacer>
                     </item>
                    </layout>
                   </item>
@@ -962,6 +1009,12 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
                 <layout class="QHBoxLayout" name="horizontalLayout_3">
                  <item>
                   <widget class="QLabel" name="label_5">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
                    <property name="font">
                     <font>
                      <family>Times New Roman</family>
@@ -974,15 +1027,15 @@ QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {
                     <string notr="true"/>
                    </property>
                    <property name="text">
-                    <string>ID:
-Ad Soyad:</string>
+                    <string>Ad Soyad:
+Telefon No:</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="ID_lineEdit">
+                  <widget class="QLineEdit" name="Arama_lineEdit">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
@@ -990,7 +1043,7 @@ Ad Soyad:</string>
                    <property name="font">
                     <font>
                      <family>Times New Roman</family>
-                     <pointsize>10</pointsize>
+                     <pointsize>12</pointsize>
                      <weight>75</weight>
                      <bold>true</bold>
                     </font>
@@ -1004,7 +1057,7 @@ Ad Soyad:</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="IDAra_pushButton">
+                  <widget class="QPushButton" name="Ara_pushButton">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
                      <horstretch>0</horstretch>
@@ -1110,30 +1163,6 @@ Ad Soyad:</string>
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_harcamaEkle">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <family>Times New Roman</family>
-              <pointsize>11</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color:rgb(255, 196, 255)</string>
-            </property>
-            <property name="text">
-             <string>Harcama Ekle</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
        </layout>
@@ -1152,6 +1181,9 @@ Ad Soyad:</string>
             <weight>50</weight>
             <bold>false</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(250, 245, 255);</string>
           </property>
           <property name="editTriggers">
            <set>QAbstractItemView::DoubleClicked</set>
@@ -1178,7 +1210,7 @@ Ad Soyad:</string>
            <number>0</number>
           </property>
           <attribute name="horizontalHeaderDefaultSectionSize">
-           <number>200</number>
+           <number>350</number>
           </attribute>
           <attribute name="horizontalHeaderStretchLastSection">
            <bool>true</bool>
@@ -1223,6 +1255,11 @@ Ad Soyad:</string>
           <column>
            <property name="text">
             <string>KART</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Ekstralar(TL)</string>
            </property>
           </column>
          </widget>
@@ -1310,16 +1347,6 @@ Ad Soyad:</string>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1500</width>
-     <height>25</height>
-    </rect>
-   </property>
-  </widget>
  </widget>
  <resources/>
  <connections/>
